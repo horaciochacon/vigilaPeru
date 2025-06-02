@@ -1,7 +1,7 @@
-# vigilaPeru <img src="man/figures/logo.png" align="right" height="120">
+# vigilaPeru <img src="man/figures/logo.png" align="right" height="250">
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/your-org/vigilaPeru/workflows/R-CMD-check/badge.svg)](https://github.com/your-org/vigilaPeru/actions)
+[![R-CMD-check](https://github.com/horaciochacon/vigilaPeru/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/horaciochacon/vigilaPeru/actions/workflows/R-CMD-check.yaml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->
 
