@@ -20,3 +20,4 @@ UBIGEO codes have format DDPPTT where:
 \item TT: District (2 digits)
 }
 }
+\keyword{internal}

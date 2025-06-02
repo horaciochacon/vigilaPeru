@@ -14,6 +14,7 @@
 #' - TT: District (2 digits)
 #' @importFrom data.table := .N data.table
 #' @importFrom stats aggregate
+#' @keywords internal
 #' @name vigilaPeru-imports
 NULL
 

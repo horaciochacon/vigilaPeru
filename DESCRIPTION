@@ -29,7 +29,7 @@ Suggests:
 Config/testthat/edition: 3
 Config/build/extra-sources: false
 VignetteBuilder: knitr
-URL: https://github.com/horaciochacon/vigilaPeru
+URL: https://horaciochacon.github.io/vigilaPeru, https://github.com/horaciochacon/vigilaPeru
 BugReports: https://github.com/horaciochacon/vigilaPeru/issues
 LazyData: true
 Language: es, en

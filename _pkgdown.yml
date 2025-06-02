@@ -21,6 +21,7 @@ navbar:
   left:
     - icon: fa-home
       href: index.html
+      aria-label: "Home"
     - text: "Inicio/Start"
       href: articles/index.html
     - text: "Referencia/Reference"
