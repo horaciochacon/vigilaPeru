@@ -2,25 +2,25 @@
 % Please edit documentation in R/discover_datasets.R
 \name{vp_discover_datasets}
 \alias{vp_discover_datasets}
-\title{Descubrir datasets de vigilancia epidemiológica / Discover epidemiological surveillance datasets}
+\title{Descubrir datasets de vigilancia epidemiologica / Discover epidemiological surveillance datasets}
 \usage{
 vp_discover_datasets(update_known = FALSE, cache_results = TRUE)
 }
 \arguments{
-\item{update_known}{Lógico. Si TRUE, actualiza la lista interna de datasets conocidos.
+\item{update_known}{Logico. Si TRUE, actualiza la lista interna de datasets conocidos.
 / Logical. If TRUE, updates the internal list of known datasets.}
 
-\item{cache_results}{Lógico. Si TRUE, guarda los resultados en caché.
+\item{cache_results}{Logico. Si TRUE, guarda los resultados en cache.
 / Logical. If TRUE, caches the results.}
 }
 \value{
-data.frame con información de datasets descubiertos / data.frame with discovered dataset information
+data.frame con informacion de datasets descubiertos / data.frame with discovered dataset information
 }
 \description{
-Busca dinámicamente todos los datasets etiquetados con "vigilancia-epidemiológica"
+Busca dinamicamente todos los datasets etiquetados con "vigilancia-epidemiologica"
 en el portal de datos abiertos.
 
-Dynamically searches for all datasets tagged with "vigilancia-epidemiológica"
+Dynamically searches for all datasets tagged with "vigilancia-epidemiologica"
 on the open data portal.
 }
 \examples{

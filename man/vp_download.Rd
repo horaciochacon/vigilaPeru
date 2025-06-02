@@ -2,7 +2,7 @@
 % Please edit documentation in R/download.R
 \name{vp_download}
 \alias{vp_download}
-\title{Descargar y leer datasets de vigilancia epidemiológica / Download and read epidemiological surveillance datasets}
+\title{Descargar y leer datasets de vigilancia epidemiologica / Download and read epidemiological surveillance datasets}
 \usage{
 vp_download(
   dataset,
@@ -18,22 +18,22 @@ vp_download(
 \item{dataset}{Nombre del dataset ("malaria", "dengue", etc.)
 / Dataset name ("malaria", "dengue", etc.)}
 
-\item{resource_index}{Índice del recurso a descargar (NULL para el más reciente).
+\item{resource_index}{Indice del recurso a descargar (NULL para el mas reciente).
 / Resource index to download (NULL for most recent).}
 
-\item{refresh}{Lógico. Si TRUE, fuerza nueva descarga incluso si existe caché.
+\item{refresh}{Logico. Si TRUE, fuerza nueva descarga incluso si existe cache.
 / Logical. If TRUE, forces new download even if cache exists.}
 
-\item{as_tibble}{Lógico. Si TRUE (predeterminado), devuelve un tibble. Si FALSE, devuelve data.table.
+\item{as_tibble}{Logico. Si TRUE (predeterminado), devuelve un tibble. Si FALSE, devuelve data.table.
 / Logical. If TRUE (default), returns a tibble. If FALSE, returns data.table.}
 
-\item{encoding}{Codificación del archivo CSV (por defecto "UTF-8").
+\item{encoding}{Codificacion del archivo CSV (por defecto "UTF-8").
 / CSV file encoding (default "UTF-8").}
 
-\item{progress}{Lógico. Si TRUE, muestra barra de progreso durante la descarga.
+\item{progress}{Logico. Si TRUE, muestra barra de progreso durante la descarga.
 / Logical. If TRUE, shows progress bar during download.}
 
-\item{max_rows}{Número máximo de filas a leer (NULL para todas).
+\item{max_rows}{Numero maximo de filas a leer (NULL para todas).
 / Maximum number of rows to read (NULL for all).}
 }
 \value{
@@ -41,19 +41,19 @@ data.table o tibble con los datos del dataset / data.table or tibble with datase
 }
 \description{
 Descarga datasets del portal de datos abiertos y los carga como data.table.
-Utiliza caché local para mejorar el rendimiento y permitir trabajo offline.
+Utiliza cache local para mejorar el rendimiento y permitir trabajo offline.
 
 Downloads datasets from the open data portal and loads them as data.table.
 Uses local cache to improve performance and enable offline work.
 }
 \examples{
-# Descargar datos de malaria más recientes / Download most recent malaria data
+# Descargar datos de malaria mas recientes / Download most recent malaria data
 mal <- vp_download("malaria")
 
-# Descargar recurso específico / Download specific resource
+# Descargar recurso especifico / Download specific resource
 mal_2008 <- vp_download("malaria", resource_index = 1)
 
-# Forzar actualización / Force update
+# Forzar actualizacion / Force update
 mal_fresh <- vp_download("malaria", refresh = TRUE)
 
 # Obtener como data.table / Get as data.table

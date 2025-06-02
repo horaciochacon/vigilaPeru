@@ -1,11 +1,11 @@
-#' Funciones auxiliares para manejo de códigos UBIGEO / Helper functions for UBIGEO codes
+#' Funciones auxiliares para manejo de codigos UBIGEO / Helper functions for UBIGEO codes
 #'
 #' @description
-#' Funciones para trabajar con códigos UBIGEO (Ubicación Geográfica) del Perú.
-#' Los códigos UBIGEO tienen formato DDPPTT donde:
-#' - DD: Departamento (2 dígitos)
-#' - PP: Provincia (2 dígitos)
-#' - TT: Distrito (2 dígitos)
+#' Funciones para trabajar con codigos UBIGEO (Ubicacion Geografica) del Peru.
+#' Los codigos UBIGEO tienen formato DDPPTT donde:
+#' - DD: Departamento (2 digitos)
+#' - PP: Provincia (2 digitos)
+#' - TT: Distrito (2 digitos)
 #'
 #' Functions to work with Peru's UBIGEO (Geographic Location) codes.
 #' UBIGEO codes have format DDPPTT where:
@@ -13,15 +13,15 @@
 #' - PP: Province (2 digits)
 #' - TT: District (2 digits)
 #' @importFrom data.table := .N data.table
-#' @importFrom stats aggregate
+#' @importFrom stats aggregate median sd var mad quantile
 #' @keywords internal
 #' @name vigilaPeru-imports
 NULL
 
 #' Extraer departamento de UBIGEO / Extract department from UBIGEO
 #'
-#' @param ubigeo Vector de códigos UBIGEO de 6 dígitos / Vector of 6-digit UBIGEO codes
-#' @return Vector con códigos de departamento (2 dígitos) / Vector with department codes (2 digits)
+#' @param ubigeo Vector de codigos UBIGEO de 6 digitos / Vector of 6-digit UBIGEO codes
+#' @return Vector con codigos de departamento (2 digitos) / Vector with department codes (2 digits)
 #' @export
 #' @examples
 #' ubigeo_get_department("150101")  # "15" (Lima)
@@ -34,8 +34,8 @@ ubigeo_get_department <- function(ubigeo) {
 
 #' Extraer provincia de UBIGEO / Extract province from UBIGEO
 #'
-#' @param ubigeo Vector de códigos UBIGEO de 6 dígitos / Vector of 6-digit UBIGEO codes
-#' @return Vector con códigos de provincia (4 dígitos: DDPP) / Vector with province codes (4 digits: DDPP)
+#' @param ubigeo Vector de codigos UBIGEO de 6 digitos / Vector of 6-digit UBIGEO codes
+#' @return Vector con codigos de provincia (4 digitos: DDPP) / Vector with province codes (4 digits: DDPP)
 #' @export
 #' @examples
 #' ubigeo_get_province("150101")  # "1501" (Lima province)
@@ -48,8 +48,8 @@ ubigeo_get_province <- function(ubigeo) {
 
 #' Validar formato de UBIGEO / Validate UBIGEO format
 #'
-#' @param ubigeo Vector de códigos UBIGEO / Vector of UBIGEO codes
-#' @return Vector lógico indicando si cada código es válido / Logical vector indicating if each code is valid
+#' @param ubigeo Vector de codigos UBIGEO / Vector of UBIGEO codes
+#' @return Vector logico indicando si cada codigo es valido / Logical vector indicating if each code is valid
 #' @export
 #' @examples
 #' ubigeo_is_valid(c("150101", "15", "999999", "ABC"))
@@ -63,8 +63,8 @@ ubigeo_is_valid <- function(ubigeo) {
 
 #' Agregar ceros a la izquierda en UBIGEO / Pad UBIGEO with leading zeros
 #'
-#' @param ubigeo Vector de códigos UBIGEO que pueden estar sin ceros / Vector of UBIGEO codes that may lack zeros
-#' @return Vector con códigos UBIGEO de 6 dígitos / Vector with 6-digit UBIGEO codes
+#' @param ubigeo Vector de codigos UBIGEO que pueden estar sin ceros / Vector of UBIGEO codes that may lack zeros
+#' @return Vector con codigos UBIGEO de 6 digitos / Vector with 6-digit UBIGEO codes
 #' @export
 #' @examples
 #' ubigeo_pad("10101")   # "010101"
@@ -81,7 +81,7 @@ ubigeo_pad <- function(ubigeo) {
 
 #' Tabla de referencia de departamentos / Department reference table
 #'
-#' @return data.table con códigos y nombres de departamentos / data.table with department codes and names
+#' @return data.table con codigos y nombres de departamentos / data.table with department codes and names
 #' @export
 #' @examples
 #' deps <- ubigeo_departments()
@@ -97,7 +97,7 @@ ubigeo_departments <- function() {
     ),
     capital = c(
       "Chachapoyas", "Huaraz", "Abancay", "Arequipa", "Ayacucho",
-      "Cajamarca", "Callao", "Cusco", "Huancavelica", "Huánuco",
+      "Cajamarca", "Callao", "Cusco", "Huancavelica", "Huanuco",
       "Ica", "Huancayo", "Trujillo", "Chiclayo", "Lima",
       "Iquitos", "Puerto Maldonado", "Moquegua", "Cerro de Pasco", "Piura",
       "Puno", "Moyobamba", "Tacna", "Tumbes", "Pucallpa"
@@ -112,19 +112,19 @@ ubigeo_departments <- function() {
   )
 }
 
-#' Agregación geográfica usando UBIGEO / Geographic aggregation using UBIGEO
+#' Agregacion geografica usando UBIGEO / Geographic aggregation using UBIGEO
 #'
 #' @description
-#' Agrega datos a nivel de departamento o provincia usando códigos UBIGEO.
+#' Agrega datos a nivel de departamento o provincia usando codigos UBIGEO.
 #' 
 #' Aggregates data at department or province level using UBIGEO codes.
 #'
 #' @param data data.table o data.frame con columna 'ubigeo'
-#' @param level Nivel de agregación: "department" o "province"
-#' @param ubigeo_col Nombre de la columna con códigos UBIGEO (default: "ubigeo")
-#' @param include_names Lógico. Si TRUE, incluye nombres de departamentos
+#' @param level Nivel de agregacion: "department" o "province"
+#' @param ubigeo_col Nombre de la columna con codigos UBIGEO (default: "ubigeo")
+#' @param include_names Logico. Si TRUE, incluye nombres de departamentos
 #'
-#' @return data.table con código geográfico agregado
+#' @return data.table con codigo geografico agregado
 #' @export
 #' @examples
 #' # Datos de ejemplo / Example data
@@ -151,7 +151,7 @@ ubigeo_aggregate <- function(data, level = c("department", "province"),
                  ubigeo_col, ubigeo_col))
   }
   
-  # Crear columna de agregación
+  # Crear columna de agregacion
   if (level == "department") {
     data[, geo_code := ubigeo_get_department(get(ubigeo_col))]
     

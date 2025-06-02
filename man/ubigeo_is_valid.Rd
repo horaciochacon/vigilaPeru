@@ -7,10 +7,10 @@
 ubigeo_is_valid(ubigeo)
 }
 \arguments{
-\item{ubigeo}{Vector de códigos UBIGEO / Vector of UBIGEO codes}
+\item{ubigeo}{Vector de codigos UBIGEO / Vector of UBIGEO codes}
 }
 \value{
-Vector lógico indicando si cada código es válido / Logical vector indicating if each code is valid
+Vector logico indicando si cada codigo es valido / Logical vector indicating if each code is valid
 }
 \description{
 Validar formato de UBIGEO / Validate UBIGEO format

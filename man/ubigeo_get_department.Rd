@@ -7,10 +7,10 @@
 ubigeo_get_department(ubigeo)
 }
 \arguments{
-\item{ubigeo}{Vector de códigos UBIGEO de 6 dígitos / Vector of 6-digit UBIGEO codes}
+\item{ubigeo}{Vector de codigos UBIGEO de 6 digitos / Vector of 6-digit UBIGEO codes}
 }
 \value{
-Vector con códigos de departamento (2 dígitos) / Vector with department codes (2 digits)
+Vector con codigos de departamento (2 digitos) / Vector with department codes (2 digits)
 }
 \description{
 Extraer departamento de UBIGEO / Extract department from UBIGEO

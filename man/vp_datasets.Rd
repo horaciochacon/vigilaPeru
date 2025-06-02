@@ -2,23 +2,23 @@
 % Please edit documentation in R/datasets.R
 \name{vp_datasets}
 \alias{vp_datasets}
-\title{Listar datasets de vigilancia epidemiológica / List epidemiological surveillance datasets}
+\title{Listar datasets de vigilancia epidemiologica / List epidemiological surveillance datasets}
 \usage{
 vp_datasets(as_tibble = TRUE, refresh = FALSE)
 }
 \arguments{
-\item{as_tibble}{Lógico. Si TRUE (predeterminado), devuelve un tibble. Si FALSE, devuelve data.table.
+\item{as_tibble}{Logico. Si TRUE (predeterminado), devuelve un tibble. Si FALSE, devuelve data.table.
 / Logical. If TRUE (default), returns a tibble. If FALSE, returns data.table.}
 
-\item{refresh}{Lógico. Si TRUE, actualiza la información desde el portal.
+\item{refresh}{Logico. Si TRUE, actualiza la informacion desde el portal.
 / Logical. If TRUE, refreshes information from the portal.}
 }
 \value{
-data.table o tibble con información de datasets / data.table or tibble with dataset information
+data.table o tibble con informacion de datasets / data.table or tibble with dataset information
 }
 \description{
-Devuelve una tabla con todos los datasets de vigilancia epidemiológica disponibles
-en el portal de datos abiertos del Perú.
+Devuelve una tabla con todos los datasets de vigilancia epidemiologica disponibles
+en el portal de datos abiertos del Peru.
 
 Returns a table with all epidemiological surveillance datasets available
 on Peru's open data portal.

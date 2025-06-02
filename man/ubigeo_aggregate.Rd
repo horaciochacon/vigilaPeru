@@ -2,7 +2,7 @@
 % Please edit documentation in R/ubigeo_helpers.R
 \name{ubigeo_aggregate}
 \alias{ubigeo_aggregate}
-\title{Agregación geográfica usando UBIGEO / Geographic aggregation using UBIGEO}
+\title{Agregacion geografica usando UBIGEO / Geographic aggregation using UBIGEO}
 \usage{
 ubigeo_aggregate(
   data,
@@ -14,17 +14,17 @@ ubigeo_aggregate(
 \arguments{
 \item{data}{data.table o data.frame con columna 'ubigeo'}
 
-\item{level}{Nivel de agregación: "department" o "province"}
+\item{level}{Nivel de agregacion: "department" o "province"}
 
-\item{ubigeo_col}{Nombre de la columna con códigos UBIGEO (default: "ubigeo")}
+\item{ubigeo_col}{Nombre de la columna con codigos UBIGEO (default: "ubigeo")}
 
-\item{include_names}{Lógico. Si TRUE, incluye nombres de departamentos}
+\item{include_names}{Logico. Si TRUE, incluye nombres de departamentos}
 }
 \value{
-data.table con código geográfico agregado
+data.table con codigo geografico agregado
 }
 \description{
-Agrega datos a nivel de departamento o provincia usando códigos UBIGEO.
+Agrega datos a nivel de departamento o provincia usando codigos UBIGEO.
 
 Aggregates data at department or province level using UBIGEO codes.
 }

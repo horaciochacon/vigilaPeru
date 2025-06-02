@@ -2,14 +2,14 @@
 % Please edit documentation in R/ubigeo_helpers.R
 \name{vigilaPeru-imports}
 \alias{vigilaPeru-imports}
-\title{Funciones auxiliares para manejo de códigos UBIGEO / Helper functions for UBIGEO codes}
+\title{Funciones auxiliares para manejo de codigos UBIGEO / Helper functions for UBIGEO codes}
 \description{
-Funciones para trabajar con códigos UBIGEO (Ubicación Geográfica) del Perú.
-Los códigos UBIGEO tienen formato DDPPTT donde:
+Funciones para trabajar con codigos UBIGEO (Ubicacion Geografica) del Peru.
+Los codigos UBIGEO tienen formato DDPPTT donde:
 \itemize{
-\item DD: Departamento (2 dígitos)
-\item PP: Provincia (2 dígitos)
-\item TT: Distrito (2 dígitos)
+\item DD: Departamento (2 digitos)
+\item PP: Provincia (2 digitos)
+\item TT: Distrito (2 digitos)
 }
 
 Functions to work with Peru's UBIGEO (Geographic Location) codes.

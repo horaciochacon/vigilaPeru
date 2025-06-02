@@ -2,14 +2,14 @@
 #'
 #' @description
 #' Recupera los metadatos completos de un dataset en formato DCAT/DCAP-AP,
-#' incluyendo información sobre recursos, distribuciones y términos de uso.
+#' incluyendo informacion sobre recursos, distribuciones y terminos de uso.
 #' 
 #' Retrieves complete dataset metadata in DCAT/DCAP-AP format,
 #' including information about resources, distributions and terms of use.
 #'
 #' @param dataset Nombre del dataset ("malaria", "dengue", etc.)
 #'   / Dataset name ("malaria", "dengue", etc.)
-#' @param refresh Lógico. Si TRUE, actualiza la información desde el portal.
+#' @param refresh Logico. Si TRUE, actualiza la informacion desde el portal.
 #'   / Logical. If TRUE, refreshes information from the portal.
 #'
 #' @return Lista con metadatos DCAT / List with DCAT metadata
@@ -19,7 +19,7 @@
 #' # Obtener metadatos de malaria / Get malaria metadata
 #' metadata <- vp_metadata("malaria")
 #' 
-#' # Ver términos DCAT disponibles / View available DCAT terms
+#' # Ver terminos DCAT disponibles / View available DCAT terms
 #' names(metadata)
 #' 
 #' # Acceder a distribuciones / Access distributions
@@ -33,9 +33,9 @@ vp_metadata <- function(dataset, refresh = FALSE) {
   
   cache_path <- get_cache_path(paste0("metadata_", dataset), extension = "rds")
   
-  # Verificar caché / Check cache
+  # Verificar cache / Check cache
   if (!refresh && file.exists(cache_path)) {
-    futile.logger::flog.info(sprintf("Usando metadatos en caché para %s / Using cached metadata for %s", 
+    futile.logger::flog.info(sprintf("Usando metadatos en cache para %s / Using cached metadata for %s", 
                                      dataset, dataset))
     return(readRDS(cache_path))
   }
@@ -63,7 +63,7 @@ vp_metadata <- function(dataset, refresh = FALSE) {
         `foaf:name` = if(!is.null(raw_metadata$organization) && !is.null(raw_metadata$organization$title)) {
           raw_metadata$organization$title
         } else {
-          "Centro Nacional de Epidemiología, Prevención y Control de Enfermedades"
+          "Centro Nacional de Epidemiologia, Prevencion y Control de Enfermedades"
         }
       ),
       `dcat:theme` = if(!is.null(raw_metadata$tags)) {
@@ -71,7 +71,7 @@ vp_metadata <- function(dataset, refresh = FALSE) {
           if(is.list(tag$name)) tag$name[[1]] else tag$name
         })
       } else {
-        list("epidemiología", "salud pública", "vigilancia")
+        list("epidemiologia", "salud publica", "vigilancia")
       },
       `dcat:distribution` = lapply(raw_metadata$resources, function(r) {
         list(
@@ -91,22 +91,22 @@ vp_metadata <- function(dataset, refresh = FALSE) {
       `dct:spatial` = list(
         `@type` = "dct:Location",
         `locn:geometry` = "POLYGON((-81.4109 -18.3479, -68.6650 -18.3479, -68.6650 -0.0572, -75.0889 -0.0572, -81.4109 -18.3479))",
-        `locn:name` = "Perú"
+        `locn:name` = "Peru"
       ),
       `dct:temporal` = extract_temporal_coverage(raw_metadata),
       `_raw` = raw_metadata  # Incluir datos crudos para referencia / Include raw data for reference
     )
     
-    # Guardar en caché / Save to cache
+    # Guardar en cache / Save to cache
     saveRDS(dcat_metadata, cache_path)
-    futile.logger::flog.info(sprintf("Metadatos guardados en caché / Metadata saved to cache"))
+    futile.logger::flog.info(sprintf("Metadatos guardados en cache / Metadata saved to cache"))
     
     return(dcat_metadata)
     
   }, error = function(e) {
-    # Si hay error, intentar usar caché antiguo / If error, try to use old cache
+    # Si hay error, intentar usar cache antiguo / If error, try to use old cache
     if (file.exists(cache_path)) {
-      futile.logger::flog.warn(sprintf("Error obteniendo metadatos: %s. Usando caché / Error getting metadata: %s. Using cache", 
+      futile.logger::flog.warn(sprintf("Error obteniendo metadatos: %s. Usando cache / Error getting metadata: %s. Using cache", 
                                        e$message))
       return(readRDS(cache_path))
     } else {
@@ -118,14 +118,14 @@ vp_metadata <- function(dataset, refresh = FALSE) {
 #' Funciones auxiliares para metadatos / Metadata helper functions
 #' @noRd
 
-# Convertir tamaño a bytes / Convert size to bytes
+# Convertir tamano a bytes / Convert size to bytes
 parse_size_to_bytes <- function(size_str) {
   if (is.null(size_str) || size_str == "") return(NULL)
   
   # Remover espacios / Remove spaces
   size_str <- gsub(" ", "", size_str)
   
-  # Extraer número y unidad / Extract number and unit
+  # Extraer numero y unidad / Extract number and unit
   matches <- regmatches(size_str, regexec("([0-9.]+)([A-Za-z]+)", size_str))
   
   if (length(matches[[1]]) < 3) return(NULL)
@@ -144,15 +144,15 @@ parse_size_to_bytes <- function(size_str) {
   return(as.integer(value * multiplier))
 }
 
-# Extraer palabras clave de la descripción / Extract keywords from description
+# Extraer palabras clave de la descripcion / Extract keywords from description
 extract_keywords_from_description <- function(description) {
   if (is.null(description)) return(list())
   
   # Lista de palabras clave comunes / Common keywords list
-  keywords <- c("malaria", "dengue", "leishmaniasis", "epidemiología", "vigilancia", 
-                "salud pública", "RENACE", "CDC", "Perú", "notificación", "casos")
+  keywords <- c("malaria", "dengue", "leishmaniasis", "epidemiologia", "vigilancia", 
+                "salud publica", "RENACE", "CDC", "Peru", "notificacion", "casos")
   
-  # Buscar cuáles están presentes / Find which are present
+  # Buscar cuales estan presentes / Find which are present
   found <- keywords[sapply(keywords, function(k) grepl(k, description, ignore.case = TRUE))]
   
   return(as.list(found))
@@ -160,14 +160,14 @@ extract_keywords_from_description <- function(description) {
 
 # Extraer cobertura temporal / Extract temporal coverage
 extract_temporal_coverage <- function(metadata) {
-  # Buscar años en los nombres de recursos y descripción / Look for years in resource names and description
+  # Buscar anos en los nombres de recursos y descripcion / Look for years in resource names and description
   years <- c()
   
   # Buscar en recursos / Search in resources
   if (!is.null(metadata$resources)) {
     for (r in metadata$resources) {
       name <- if(is.list(r$name)) r$name[[1]] else r$name
-      # Extraer años (4 dígitos) / Extract years (4 digits)
+      # Extraer anos (4 digitos) / Extract years (4 digits)
       year_matches <- gregexpr("\\b(19|20)\\d{2}\\b", name)
       if (year_matches[[1]][1] != -1) {
         years <- c(years, regmatches(name, year_matches)[[1]])
@@ -175,7 +175,7 @@ extract_temporal_coverage <- function(metadata) {
     }
   }
   
-  # Buscar en la descripción / Search in description
+  # Buscar en la descripcion / Search in description
   if (!is.null(metadata$notes) && length(years) == 0) {
     year_matches <- gregexpr("\\b(19|20)\\d{2}\\b", metadata$notes)
     if (year_matches[[1]][1] != -1) {
@@ -185,7 +185,7 @@ extract_temporal_coverage <- function(metadata) {
   
   if (length(years) > 0) {
     years <- as.numeric(unique(years))
-    # Filtrar años futuros / Filter future years
+    # Filtrar anos futuros / Filter future years
     current_year <- as.numeric(format(Sys.Date(), "%Y"))
     years <- years[years <= current_year]
     

@@ -1,18 +1,18 @@
-#' Descubrir datasets de vigilancia epidemiológica / Discover epidemiological surveillance datasets
+#' Descubrir datasets de vigilancia epidemiologica / Discover epidemiological surveillance datasets
 #'
 #' @description
-#' Busca dinámicamente todos los datasets etiquetados con "vigilancia-epidemiológica"
+#' Busca dinamicamente todos los datasets etiquetados con "vigilancia-epidemiologica"
 #' en el portal de datos abiertos.
 #' 
-#' Dynamically searches for all datasets tagged with "vigilancia-epidemiológica"
+#' Dynamically searches for all datasets tagged with "vigilancia-epidemiologica"
 #' on the open data portal.
 #'
-#' @param update_known Lógico. Si TRUE, actualiza la lista interna de datasets conocidos.
+#' @param update_known Logico. Si TRUE, actualiza la lista interna de datasets conocidos.
 #'   / Logical. If TRUE, updates the internal list of known datasets.
-#' @param cache_results Lógico. Si TRUE, guarda los resultados en caché.
+#' @param cache_results Logico. Si TRUE, guarda los resultados en cache.
 #'   / Logical. If TRUE, caches the results.
 #'
-#' @return data.frame con información de datasets descubiertos / data.frame with discovered dataset information
+#' @return data.frame con informacion de datasets descubiertos / data.frame with discovered dataset information
 #' @export
 #'
 #' @examples
@@ -24,24 +24,24 @@
 vp_discover_datasets <- function(update_known = FALSE, cache_results = TRUE) {
   setup_logging()
   
-  # URL de búsqueda por etiqueta / Tag search URL
+  # URL de busqueda por etiqueta / Tag search URL
   search_url <- "https://datosabiertos.gob.pe/search/field_tags/vigilancia-epidemiol%C3%B3gica-1540"
   
   cache_path <- get_cache_path("discovered_datasets", extension = "rds")
   
-  # Intentar usar caché si existe / Try to use cache if exists
+  # Intentar usar cache si existe / Try to use cache if exists
   if (cache_results && file.exists(cache_path)) {
     cache_age_hours <- difftime(Sys.time(), file.info(cache_path)$mtime, units = "hours")
-    if (cache_age_hours < 24) {  # Caché válido por 24 horas / Cache valid for 24 hours
-      futile.logger::flog.info("Usando lista de datasets descubiertos en caché / Using cached discovered datasets list")
+    if (cache_age_hours < 24) {  # Cache valido por 24 horas / Cache valid for 24 hours
+      futile.logger::flog.info("Usando lista de datasets descubiertos en cache / Using cached discovered datasets list")
       return(readRDS(cache_path))
     }
   }
   
-  futile.logger::flog.info("Buscando datasets de vigilancia epidemiológica / Searching for epidemiological surveillance datasets")
+  futile.logger::flog.info("Buscando datasets de vigilancia epidemiologica / Searching for epidemiological surveillance datasets")
   
   tryCatch({
-    # Obtener la página HTML / Get HTML page
+    # Obtener la pagina HTML / Get HTML page
     resp <- httr2::request(search_url) |>
       httr2::req_timeout(30) |>
       httr2::req_user_agent("vigilaPeru R package") |>
@@ -49,7 +49,7 @@ vp_discover_datasets <- function(update_known = FALSE, cache_results = TRUE) {
     
     html_content <- httr2::resp_body_string(resp)
     
-    # Extraer información de datasets usando regex / Extract dataset info using regex
+    # Extraer informacion de datasets usando regex / Extract dataset info using regex
     # Buscar enlaces a datasets / Look for dataset links
     dataset_pattern <- '<a href="/dataset/([^"]+)"[^>]*>([^<]+)</a>'
     matches <- gregexpr(dataset_pattern, html_content, perl = TRUE)
@@ -61,13 +61,13 @@ vp_discover_datasets <- function(update_known = FALSE, cache_results = TRUE) {
       match_data <- regmatches(html_content, matches)[[1]]
       
       for (match in match_data) {
-        # Extraer ID y título / Extract ID and title
+        # Extraer ID y titulo / Extract ID and title
         parts <- regmatches(match, regexec(dataset_pattern, match, perl = TRUE))[[1]]
         if (length(parts) >= 3) {
           dataset_id <- parts[2]
           dataset_title <- parts[3]
           
-          # Limpiar título HTML / Clean HTML title
+          # Limpiar titulo HTML / Clean HTML title
           dataset_title <- gsub("&amp;", "&", dataset_title)
           dataset_title <- gsub("&quot;", '"', dataset_title)
           dataset_title <- gsub("&#39;", "'", dataset_title)
@@ -86,14 +86,14 @@ vp_discover_datasets <- function(update_known = FALSE, cache_results = TRUE) {
       }
     }
     
-    # Buscar información adicional en la página / Look for additional info on page
+    # Buscar informacion adicional en la pagina / Look for additional info on page
     # Extraer organizaciones / Extract organizations
     org_pattern <- '<div class="organization"[^>]*>\\s*<a[^>]+>([^<]+)</a>'
     org_matches <- gregexpr(org_pattern, html_content, perl = TRUE)
     organizations <- unique(regmatches(html_content, org_matches)[[1]])
     
     if (length(dataset_info) == 0) {
-      warning("No se encontraron datasets de vigilancia epidemiológica / No epidemiological surveillance datasets found")
+      warning("No se encontraron datasets de vigilancia epidemiologica / No epidemiological surveillance datasets found")
       return(data.frame())
     }
     
@@ -111,7 +111,7 @@ vp_discover_datasets <- function(update_known = FALSE, cache_results = TRUE) {
     futile.logger::flog.info(sprintf("Encontrados %d datasets de vigilancia / Found %d surveillance datasets", 
                                      nrow(datasets_df)))
     
-    # Guardar en caché si se solicita / Save to cache if requested
+    # Guardar en cache si se solicita / Save to cache if requested
     if (cache_results) {
       saveRDS(datasets_df, cache_path)
     }
@@ -124,9 +124,9 @@ vp_discover_datasets <- function(update_known = FALSE, cache_results = TRUE) {
     return(datasets_df)
     
   }, error = function(e) {
-    # Si hay error, intentar usar caché antiguo / If error, try old cache
+    # Si hay error, intentar usar cache antiguo / If error, try old cache
     if (file.exists(cache_path)) {
-      futile.logger::flog.warn(sprintf("Error descubriendo datasets: %s. Usando caché / Error discovering datasets: %s. Using cache", 
+      futile.logger::flog.warn(sprintf("Error descubriendo datasets: %s. Usando cache / Error discovering datasets: %s. Using cache", 
                                        e$message))
       return(readRDS(cache_path))
     } else {
@@ -144,7 +144,7 @@ update_known_datasets <- function(datasets_df) {
   new_datasets <- list()
   
   for (i in 1:nrow(datasets_df)) {
-    # Extraer nombre clave del título / Extract key name from title
+    # Extraer nombre clave del titulo / Extract key name from title
     title <- tolower(datasets_df$titulo[i])
     
     # Buscar palabras clave / Look for keywords

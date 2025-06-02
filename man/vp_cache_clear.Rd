@@ -2,34 +2,34 @@
 % Please edit documentation in R/cache.R
 \name{vp_cache_clear}
 \alias{vp_cache_clear}
-\title{Limpiar caché / Clear cache}
+\title{Limpiar cache / Clear cache}
 \usage{
 vp_cache_clear(dataset = NULL, older_than = NULL)
 }
 \arguments{
-\item{dataset}{Nombre del dataset a limpiar. Si es NULL, limpia todo el caché.
+\item{dataset}{Nombre del dataset a limpiar. Si es NULL, limpia todo el cache.
 / Dataset name to clear. If NULL, clears all cache.}
 
-\item{older_than}{Eliminar archivos más antiguos que este número de días.
+\item{older_than}{Eliminar archivos mas antiguos que este numero de dias.
 / Remove files older than this number of days.}
 }
 \value{
 NULL (invisible)
 }
 \description{
-Elimina archivos del caché de vigilaPeru. Puede eliminar todo el caché o solo archivos específicos.
+Elimina archivos del cache de vigilaPeru. Puede eliminar todo el cache o solo archivos especificos.
 
 Removes files from vigilaPeru cache. Can remove all cache or specific files.
 }
 \examples{
 \dontrun{
-# Limpiar todo el caché / Clear all cache
+# Limpiar todo el cache / Clear all cache
 vp_cache_clear()
 
-# Limpiar caché de malaria / Clear malaria cache
+# Limpiar cache de malaria / Clear malaria cache
 vp_cache_clear("malaria")
 
-# Limpiar archivos de más de 30 días / Clear files older than 30 days
+# Limpiar archivos de mas de 30 dias / Clear files older than 30 days
 vp_cache_clear(older_than = 30)
 }
 }

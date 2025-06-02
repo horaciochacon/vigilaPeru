@@ -2,7 +2,7 @@
 % Please edit documentation in R/aggregate.R
 \name{vp_aggregate}
 \alias{vp_aggregate}
-\title{Agregaci\u00f3n r\u00e1pida de datos epidemiol\u00f3gicos / Fast aggregation of epidemiological data}
+\title{Agregacion rapida de datos epidemiologicos / Fast aggregation of epidemiological data}
 \usage{
 vp_aggregate(
   data,
@@ -14,30 +14,30 @@ vp_aggregate(
 )
 }
 \arguments{
-\item{data}{data.table o data.frame con datos epidemiol\u00f3gicos.
+\item{data}{data.table o data.frame con datos epidemiologicos.
 / data.table or data.frame with epidemiological data.}
 
-\item{by}{Vector de caracteres o lista con variables de agrupaci\u00f3n.
+\item{by}{Vector de caracteres o lista con variables de agrupacion.
 / Character vector or list with grouping variables.}
 
 \item{summarize}{Lista con funciones de resumen a aplicar.
 / List with summary functions to apply.}
 
-\item{cases_col}{Nombre de la columna de casos (por defecto busca autom\u00e1ticamente).
+\item{cases_col}{Nombre de la columna de casos (por defecto busca automaticamente).
 / Name of cases column (default searches automatically).}
 
-\item{as_tibble}{L\u00f3gico. Si TRUE (predeterminado), devuelve un tibble.
+\item{as_tibble}{Logico. Si TRUE (predeterminado), devuelve un tibble.
 / Logical. If TRUE (default), returns a tibble.}
 
-\item{na.rm}{L\u00f3gico. Si TRUE, elimina valores NA en c\u00e1lculos.
+\item{na.rm}{Logico. Si TRUE, elimina valores NA en calculos.
 / Logical. If TRUE, removes NA values in calculations.}
 }
 \value{
 data.table o tibble con datos agregados / data.table or tibble with aggregated data
 }
 \description{
-Realiza agregaciones r\u00e1pidas de datos epidemiol\u00f3gicos usando data.table.
-Soporta agrupaci\u00f3n flexible por m\u00faltiples variables y c\u00e1lculo de estad\u00edsticas.
+Realiza agregaciones rapidas de datos epidemiologicos usando data.table.
+Soporta agrupacion flexible por multiples variables y calculo de estadisticas.
 
 Performs fast aggregations of epidemiological data using data.table.
 Supports flexible grouping by multiple variables and statistics calculation.
@@ -46,13 +46,13 @@ Supports flexible grouping by multiple variables and statistics calculation.
 # Cargar datos de malaria / Load malaria data
 mal <- vp_download("malaria")
 
-# Agregar por a\u00f1o y departamento / Aggregate by year and department
+# Agregar por ano y departamento / Aggregate by year and department
 agg1 <- vp_aggregate(mal, by = c("ano", "departamento"))
 
-# Agregar por semana epidemiol\u00f3gica / Aggregate by epidemiological week
+# Agregar por semana epidemiologica / Aggregate by epidemiological week
 agg2 <- vp_aggregate(mal, by = c("ano", "semana"))
 
-# Agregar con m\u00faltiples estad\u00edsticas / Aggregate with multiple statistics
+# Agregar con multiples estadisticas / Aggregate with multiple statistics
 agg3 <- vp_aggregate(mal, 
   by = c("ano", "sexo"),
   summarize = list(

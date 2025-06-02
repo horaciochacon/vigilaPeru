@@ -1,18 +1,18 @@
-#' Listar datasets de vigilancia epidemiológica / List epidemiological surveillance datasets
+#' Listar datasets de vigilancia epidemiologica / List epidemiological surveillance datasets
 #'
 #' @description
-#' Devuelve una tabla con todos los datasets de vigilancia epidemiológica disponibles
-#' en el portal de datos abiertos del Perú.
+#' Devuelve una tabla con todos los datasets de vigilancia epidemiologica disponibles
+#' en el portal de datos abiertos del Peru.
 #' 
 #' Returns a table with all epidemiological surveillance datasets available
 #' on Peru's open data portal.
 #'
-#' @param as_tibble Lógico. Si TRUE (predeterminado), devuelve un tibble. Si FALSE, devuelve data.table.
+#' @param as_tibble Logico. Si TRUE (predeterminado), devuelve un tibble. Si FALSE, devuelve data.table.
 #'   / Logical. If TRUE (default), returns a tibble. If FALSE, returns data.table.
-#' @param refresh Lógico. Si TRUE, actualiza la información desde el portal.
+#' @param refresh Logico. Si TRUE, actualiza la informacion desde el portal.
 #'   / Logical. If TRUE, refreshes information from the portal.
 #'
-#' @return data.table o tibble con información de datasets / data.table or tibble with dataset information
+#' @return data.table o tibble con informacion de datasets / data.table or tibble with dataset information
 #' @export
 #'
 #' @examples
@@ -26,9 +26,9 @@ vp_datasets <- function(as_tibble = TRUE, refresh = FALSE) {
   
   cache_path <- get_cache_path("datasets_list", extension = "rds")
   
-  # Verificar caché / Check cache
+  # Verificar cache / Check cache
   if (!refresh && file.exists(cache_path)) {
-    futile.logger::flog.info("Usando lista de datasets en caché / Using cached dataset list")
+    futile.logger::flog.info("Usando lista de datasets en cache / Using cached dataset list")
     datasets <- readRDS(cache_path)
   } else {
     futile.logger::flog.info("Obteniendo lista de datasets / Getting dataset list")
@@ -40,7 +40,7 @@ vp_datasets <- function(as_tibble = TRUE, refresh = FALSE) {
         dataset_id <- KNOWN_DATASETS[[name]]
         metadata <- get_dataset_metadata(dataset_id)
         
-        # Extraer información básica / Extract basic information
+        # Extraer informacion basica / Extract basic information
         list(
           nombre = name,
           dataset_id = dataset_id,
@@ -48,7 +48,7 @@ vp_datasets <- function(as_tibble = TRUE, refresh = FALSE) {
           organizacion = if(!is.null(metadata$organization) && !is.null(metadata$organization$title)) {
             metadata$organization$title
           } else {
-            "Centro Nacional de Epidemiología, Prevención y Control de Enfermedades"
+            "Centro Nacional de Epidemiologia, Prevencion y Control de Enfermedades"
           },
           creado = metadata$metadata_created,
           modificado = metadata$metadata_modified,
@@ -65,25 +65,25 @@ vp_datasets <- function(as_tibble = TRUE, refresh = FALSE) {
     datasets_info <- Filter(Negate(is.null), datasets_info)
     
     if (length(datasets_info) == 0) {
-      stop("No se pudo obtener información de ningún dataset / Could not get information from any dataset")
+      stop("No se pudo obtener informacion de ningun dataset / Could not get information from any dataset")
     }
     
     datasets <- data.table::rbindlist(datasets_info)
     
-    # Guardar en caché / Save to cache
+    # Guardar en cache / Save to cache
     saveRDS(datasets, cache_path)
-    futile.logger::flog.info(sprintf("Lista de datasets guardada en caché / Dataset list saved to cache"))
+    futile.logger::flog.info(sprintf("Lista de datasets guardada en cache / Dataset list saved to cache"))
   }
   
   # Convertir a tibble si se solicita / Convert to tibble if requested
   return(maybe_as_tibble(datasets, as_tibble))
 }
 
-#' Información detallada de datasets / Detailed dataset information
+#' Informacion detallada de datasets / Detailed dataset information
 #'
 #' @description
-#' Muestra información detallada de los datasets disponibles, incluyendo
-#' descripción de variables y recursos.
+#' Muestra informacion detallada de los datasets disponibles, incluyendo
+#' descripcion de variables y recursos.
 #' 
 #' Shows detailed information about available datasets, including
 #' variable descriptions and resources.
@@ -91,14 +91,14 @@ vp_datasets <- function(as_tibble = TRUE, refresh = FALSE) {
 #' @param dataset Nombre del dataset ("malaria", "dengue", etc.) o NULL para todos.
 #'   / Dataset name ("malaria", "dengue", etc.) or NULL for all.
 #'
-#' @return Lista con información detallada / List with detailed information
+#' @return Lista con informacion detallada / List with detailed information
 #' @export
 #'
 #' @examples
-#' # Información de malaria / Malaria information
+#' # Informacion de malaria / Malaria information
 #' vp_dataset_info("malaria")
 #' 
-#' # Información de todos los datasets / All datasets information
+#' # Informacion de todos los datasets / All datasets information
 #' vp_dataset_info()
 vp_dataset_info <- function(dataset = NULL) {
   if (!is.null(dataset)) {
@@ -120,7 +120,7 @@ vp_dataset_info <- function(dataset = NULL) {
         list(
           nombre = if(is.list(r$name)) r$name[[1]] else r$name,
           formato = if(is.list(r$format)) r$format[[1]] else r$format,
-          tamaño = if(is.list(r$size)) r$size[[1]] else r$size,
+          tamano = if(is.list(r$size)) r$size[[1]] else r$size,
           url = if(is.list(r$url)) r$url[[1]] else r$url,
           modificado = if(is.list(r$last_modified)) r$last_modified[[1]] else r$last_modified
         )
@@ -134,7 +134,7 @@ vp_dataset_info <- function(dataset = NULL) {
       organizacion = if(!is.null(metadata$organization) && !is.null(metadata$organization$title)) {
         metadata$organization$title
       } else {
-        "Centro Nacional de Epidemiología, Prevención y Control de Enfermedades"
+        "Centro Nacional de Epidemiologia, Prevencion y Control de Enfermedades"
       },
       licencia = metadata$license_title,
       creado = metadata$metadata_created,
@@ -142,7 +142,7 @@ vp_dataset_info <- function(dataset = NULL) {
       recursos = resources_info
     ))
   } else {
-    # Información de todos los datasets / Information for all datasets
+    # Informacion de todos los datasets / Information for all datasets
     all_info <- lapply(names(KNOWN_DATASETS), function(ds_name) {
       tryCatch({
         vp_dataset_info(ds_name)

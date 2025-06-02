@@ -11,10 +11,10 @@ vp_list_resources(dataset)
 / Dataset name ("malaria", "dengue", etc.)}
 }
 \value{
-data.frame con información de recursos / data.frame with resource information
+data.frame con informacion de recursos / data.frame with resource information
 }
 \description{
-Muestra todos los recursos CSV disponibles para un dataset específico.
+Muestra todos los recursos CSV disponibles para un dataset especifico.
 
 Shows all available CSV resources for a specific dataset.
 }

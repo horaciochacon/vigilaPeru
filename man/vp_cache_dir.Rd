@@ -2,19 +2,19 @@
 % Please edit documentation in R/cache.R
 \name{vp_cache_dir}
 \alias{vp_cache_dir}
-\title{Gestión del directorio de caché / Cache directory management}
+\title{Gestion del directorio de cache / Cache directory management}
 \usage{
 vp_cache_dir(path = NULL)
 }
 \arguments{
-\item{path}{Ruta al nuevo directorio de caché. Si es NULL, devuelve la ruta actual.
+\item{path}{Ruta al nuevo directorio de cache. Si es NULL, devuelve la ruta actual.
 / Path to new cache directory. If NULL, returns current path.}
 }
 \value{
-Ruta del directorio de caché (character) / Cache directory path (character)
+Ruta del directorio de cache (character) / Cache directory path (character)
 }
 \description{
-\code{vp_cache_dir()} devuelve o establece la ruta del directorio de caché para vigilaPeru.
+\code{vp_cache_dir()} devuelve o establece la ruta del directorio de cache para vigilaPeru.
 
 \code{vp_cache_dir()} returns or sets the cache directory path for vigilaPeru.
 }

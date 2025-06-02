@@ -7,10 +7,10 @@
 ubigeo_get_province(ubigeo)
 }
 \arguments{
-\item{ubigeo}{Vector de códigos UBIGEO de 6 dígitos / Vector of 6-digit UBIGEO codes}
+\item{ubigeo}{Vector de codigos UBIGEO de 6 digitos / Vector of 6-digit UBIGEO codes}
 }
 \value{
-Vector con códigos de provincia (4 dígitos: DDPP) / Vector with province codes (4 digits: DDPP)
+Vector con codigos de provincia (4 digitos: DDPP) / Vector with province codes (4 digits: DDPP)
 }
 \description{
 Extraer provincia de UBIGEO / Extract province from UBIGEO

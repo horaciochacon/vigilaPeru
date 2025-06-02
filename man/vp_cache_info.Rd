@@ -2,15 +2,15 @@
 % Please edit documentation in R/cache.R
 \name{vp_cache_info}
 \alias{vp_cache_info}
-\title{Información del caché / Cache information}
+\title{Informacion del cache / Cache information}
 \usage{
 vp_cache_info()
 }
 \value{
-data.frame con información del caché / data.frame with cache information
+data.frame con informacion del cache / data.frame with cache information
 }
 \description{
-Muestra información sobre el uso del caché de vigilaPeru.
+Muestra informacion sobre el uso del cache de vigilaPeru.
 
 Shows information about vigilaPeru cache usage.
 }

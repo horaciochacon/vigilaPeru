@@ -7,10 +7,10 @@
 ubigeo_pad(ubigeo)
 }
 \arguments{
-\item{ubigeo}{Vector de códigos UBIGEO que pueden estar sin ceros / Vector of UBIGEO codes that may lack zeros}
+\item{ubigeo}{Vector de codigos UBIGEO que pueden estar sin ceros / Vector of UBIGEO codes that may lack zeros}
 }
 \value{
-Vector con códigos UBIGEO de 6 dígitos / Vector with 6-digit UBIGEO codes
+Vector con codigos UBIGEO de 6 digitos / Vector with 6-digit UBIGEO codes
 }
 \description{
 Agregar ceros a la izquierda en UBIGEO / Pad UBIGEO with leading zeros

@@ -1,16 +1,16 @@
-#' Gestión del directorio de caché / Cache directory management
+#' Gestion del directorio de cache / Cache directory management
 #'
 #' @description
-#' `vp_cache_dir()` devuelve o establece la ruta del directorio de caché para vigilaPeru.
+#' `vp_cache_dir()` devuelve o establece la ruta del directorio de cache para vigilaPeru.
 #' 
 #' `vp_cache_dir()` returns or sets the cache directory path for vigilaPeru.
 #'
 #' @importFrom stats aggregate
 #'
-#' @param path Ruta al nuevo directorio de caché. Si es NULL, devuelve la ruta actual.
+#' @param path Ruta al nuevo directorio de cache. Si es NULL, devuelve la ruta actual.
 #'   / Path to new cache directory. If NULL, returns current path.
 #'
-#' @return Ruta del directorio de caché (character) / Cache directory path (character)
+#' @return Ruta del directorio de cache (character) / Cache directory path (character)
 #' @export
 #'
 #' @examples
@@ -24,14 +24,14 @@
 vp_cache_dir <- function(path = NULL) {
   if (!is.null(path)) {
     if (!is.character(path) || length(path) != 1) {
-      stop("path debe ser una cadena de caracteres única / path must be a single character string")
+      stop("path debe ser una cadena de caracteres unica / path must be a single character string")
     }
     
     options(vigilaPeru.cache_dir = path)
     
     if (!dir.exists(path)) {
       dir.create(path, recursive = TRUE, showWarnings = FALSE)
-      futile.logger::flog.info(paste("Directorio de caché creado en / Cache directory created at:", path))
+      futile.logger::flog.info(paste("Directorio de cache creado en / Cache directory created at:", path))
     }
     
     return(invisible(path))
@@ -45,23 +45,23 @@ vp_cache_dir <- function(path = NULL) {
     
     if (!dir.exists(cache_dir)) {
       dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
-      futile.logger::flog.info(paste("Directorio de caché predeterminado creado en / Default cache directory created at:", cache_dir))
+      futile.logger::flog.info(paste("Directorio de cache predeterminado creado en / Default cache directory created at:", cache_dir))
     }
   }
   
   return(cache_dir)
 }
 
-#' Limpiar caché / Clear cache
+#' Limpiar cache / Clear cache
 #'
 #' @description
-#' Elimina archivos del caché de vigilaPeru. Puede eliminar todo el caché o solo archivos específicos.
+#' Elimina archivos del cache de vigilaPeru. Puede eliminar todo el cache o solo archivos especificos.
 #' 
 #' Removes files from vigilaPeru cache. Can remove all cache or specific files.
 #'
-#' @param dataset Nombre del dataset a limpiar. Si es NULL, limpia todo el caché.
+#' @param dataset Nombre del dataset a limpiar. Si es NULL, limpia todo el cache.
 #'   / Dataset name to clear. If NULL, clears all cache.
-#' @param older_than Eliminar archivos más antiguos que este número de días.
+#' @param older_than Eliminar archivos mas antiguos que este numero de dias.
 #'   / Remove files older than this number of days.
 #'
 #' @return NULL (invisible)
@@ -69,13 +69,13 @@ vp_cache_dir <- function(path = NULL) {
 #'
 #' @examples
 #' \dontrun{
-#' # Limpiar todo el caché / Clear all cache
+#' # Limpiar todo el cache / Clear all cache
 #' vp_cache_clear()
 #' 
-#' # Limpiar caché de malaria / Clear malaria cache
+#' # Limpiar cache de malaria / Clear malaria cache
 #' vp_cache_clear("malaria")
 #' 
-#' # Limpiar archivos de más de 30 días / Clear files older than 30 days
+#' # Limpiar archivos de mas de 30 dias / Clear files older than 30 days
 #' vp_cache_clear(older_than = 30)
 #' }
 vp_cache_clear <- function(dataset = NULL, older_than = NULL) {
@@ -90,26 +90,26 @@ vp_cache_clear <- function(dataset = NULL, older_than = NULL) {
     files <- list.files(cache_dir, full.names = TRUE, recursive = TRUE)
     if (length(files) > 0) {
       unlink(files)
-      futile.logger::flog.info(sprintf("Eliminados %d archivos del caché / Removed %d files from cache", length(files), length(files)))
+      futile.logger::flog.info(sprintf("Eliminados %d archivos del cache / Removed %d files from cache", length(files), length(files)))
     } else {
-      futile.logger::flog.info("Caché ya está vacío / Cache already empty")
+      futile.logger::flog.info("Cache ya esta vacio / Cache already empty")
     }
   } else if (!is.null(dataset)) {
-    # Limpiar dataset específico / Clear specific dataset
+    # Limpiar dataset especifico / Clear specific dataset
     pattern <- paste0("^", dataset, "_")
     files <- list.files(cache_dir, pattern = pattern, full.names = TRUE, recursive = TRUE)
     if (length(files) > 0) {
       unlink(files)
-      futile.logger::flog.info(sprintf("Eliminados %d archivos de caché para '%s' / Removed %d cache files for '%s'", 
+      futile.logger::flog.info(sprintf("Eliminados %d archivos de cache para '%s' / Removed %d cache files for '%s'", 
                                        length(files), dataset, length(files), dataset))
     } else {
-      futile.logger::flog.info(sprintf("No se encontraron archivos de caché para '%s' / No cache files found for '%s'", 
+      futile.logger::flog.info(sprintf("No se encontraron archivos de cache para '%s' / No cache files found for '%s'", 
                                        dataset, dataset))
     }
   } else if (!is.null(older_than)) {
     # Limpiar archivos antiguos / Clear old files
     if (!is.numeric(older_than) || older_than < 0) {
-      stop("'older_than' debe ser un número positivo de días / 'older_than' must be a positive number of days")
+      stop("'older_than' debe ser un numero positivo de dias / 'older_than' must be a positive number of days")
     }
     
     files <- list.files(cache_dir, full.names = TRUE, recursive = TRUE)
@@ -119,10 +119,10 @@ vp_cache_clear <- function(dataset = NULL, older_than = NULL) {
       
       if (length(old_files) > 0) {
         unlink(old_files)
-        futile.logger::flog.info(sprintf("Eliminados %d archivos de más de %d días / Removed %d files older than %d days", 
+        futile.logger::flog.info(sprintf("Eliminados %d archivos de mas de %d dias / Removed %d files older than %d days", 
                                          length(old_files), older_than, length(old_files), older_than))
       } else {
-        futile.logger::flog.info(sprintf("No se encontraron archivos de más de %d días / No files older than %d days found", 
+        futile.logger::flog.info(sprintf("No se encontraron archivos de mas de %d dias / No files older than %d days found", 
                                          older_than, older_than))
       }
     }
@@ -131,14 +131,14 @@ vp_cache_clear <- function(dataset = NULL, older_than = NULL) {
   invisible(NULL)
 }
 
-#' Información del caché / Cache information
+#' Informacion del cache / Cache information
 #'
 #' @description
-#' Muestra información sobre el uso del caché de vigilaPeru.
+#' Muestra informacion sobre el uso del cache de vigilaPeru.
 #' 
 #' Shows information about vigilaPeru cache usage.
 #'
-#' @return data.frame con información del caché / data.frame with cache information
+#' @return data.frame con informacion del cache / data.frame with cache information
 #' @export
 #'
 #' @examples
@@ -151,7 +151,7 @@ vp_cache_info <- function() {
       directorio = cache_dir,
       existe = FALSE,
       archivos = 0,
-      tamaño_mb = 0,
+      tamano_mb = 0,
       stringsAsFactors = FALSE
     ))
   }
@@ -163,7 +163,7 @@ vp_cache_info <- function() {
       directorio = cache_dir,
       existe = TRUE,
       archivos = 0,
-      tamaño_mb = 0,
+      tamano_mb = 0,
       stringsAsFactors = FALSE
     ))
   }
@@ -176,7 +176,7 @@ vp_cache_info <- function() {
   dataset_summary <- aggregate(file_info$size, 
                               by = list(dataset = dataset_names), 
                               FUN = function(x) sum(x, na.rm = TRUE) / 1024 / 1024)
-  names(dataset_summary)[2] <- "tamaño_mb"
+  names(dataset_summary)[2] <- "tamano_mb"
   dataset_summary$archivos <- table(dataset_names)[dataset_summary$dataset]
   
   list(
@@ -184,9 +184,9 @@ vp_cache_info <- function() {
       directorio = cache_dir,
       existe = TRUE,
       archivos_total = length(files),
-      tamaño_total_mb = round(total_size, 2),
+      tamano_total_mb = round(total_size, 2),
       stringsAsFactors = FALSE
     ),
-    por_dataset = dataset_summary[order(dataset_summary$tamaño_mb, decreasing = TRUE), ]
+    por_dataset = dataset_summary[order(dataset_summary$tamano_mb, decreasing = TRUE), ]
   )
 }

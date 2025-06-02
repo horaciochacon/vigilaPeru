@@ -7,11 +7,12 @@ if(getRversion() >= "2.15.1") {
   utils::globalVariables(c(
     ".", ":=", ".N", ".SD", ".BY", ".I", ".GRP", ".NGRP", ".EACHI",
     "ano", "semana", "ubigeo", "departamento", "geo_code", "dep_code",
-    "codigo", "i.departamento", "departamento_codigo", "mes", "trimestre"
+    "codigo", "i.departamento", "departamento_codigo", "mes", "trimestre",
+    "dummy_group"
   ))
 }
 
-#' Verificar conexión a internet / Check internet connection
+#' Verificar conexion a internet / Check internet connection
 #' @noRd
 check_internet <- function() {
   tryCatch({
@@ -24,7 +25,7 @@ check_internet <- function() {
   })
 }
 
-#' Obtener ruta de caché para un archivo / Get cache path for a file
+#' Obtener ruta de cache para un archivo / Get cache path for a file
 #' @noRd
 get_cache_path <- function(dataset_id, resource_id = NULL, extension = "csv") {
   cache_dir <- vp_cache_dir()
@@ -38,30 +39,30 @@ get_cache_path <- function(dataset_id, resource_id = NULL, extension = "csv") {
   file.path(cache_dir, filename)
 }
 
-#' Verificar si el caché necesita actualización / Check if cache needs update
+#' Verificar si el cache necesita actualizacion / Check if cache needs update
 #' @noRd
 cache_needs_update <- function(cache_path, remote_modified = NULL, max_age_hours = 24) {
   if (!file.exists(cache_path)) {
     return(TRUE)
   }
   
-  # Si tenemos fecha de modificación remota / If we have remote modification date
+  # Si tenemos fecha de modificacion remota / If we have remote modification date
   if (!is.null(remote_modified)) {
     cache_time <- file.info(cache_path)$mtime
     
     # Convertir a POSIXct si es necesario / Convert to POSIXct if needed
     if (is.character(remote_modified)) {
       # Limpiar formato de fecha del portal / Clean portal date format
-      # Ejemplo: "Date changed  Mié, 12/11/2024 - 14:57"
+      # Ejemplo: "Date changed  Mie, 12/11/2024 - 14:57"
       remote_modified <- gsub("Date changed\\s+", "", remote_modified)
       
       # Intentar parsear fecha / Try to parse date
       tryCatch({
-        # Formato: "Día, MM/DD/YYYY - HH:MM"
+        # Formato: "Dia, MM/DD/YYYY - HH:MM"
         # Extraer solo la parte de fecha y hora / Extract only date and time part
         date_match <- regmatches(remote_modified, regexpr("\\d{2}/\\d{2}/\\d{4}", remote_modified))
         if (length(date_match) > 0) {
-          # Convertir MM/DD/YYYY a formato estándar / Convert MM/DD/YYYY to standard format
+          # Convertir MM/DD/YYYY a formato estandar / Convert MM/DD/YYYY to standard format
           parts <- strsplit(date_match[[1]], "/")[[1]]
           if (length(parts) == 3) {
             std_date <- paste(parts[3], parts[1], parts[2], sep = "-")
@@ -70,13 +71,13 @@ cache_needs_update <- function(cache_path, remote_modified = NULL, max_age_hours
           }
         }
       }, error = function(e) {
-        # Si no se puede parsear, usar edad máxima / If can't parse, use max age
+        # Si no se puede parsear, usar edad maxima / If can't parse, use max age
         futile.logger::flog.debug(sprintf("No se pudo parsear fecha remota: %s", remote_modified))
       })
     }
   }
   
-  # Verificar por edad máxima / Check by max age
+  # Verificar por edad maxima / Check by max age
   cache_age_hours <- difftime(Sys.time(), file.info(cache_path)$mtime, units = "hours")
   return(cache_age_hours > max_age_hours)
 }
@@ -100,15 +101,15 @@ maybe_as_tibble <- function(dt, as_tibble = TRUE) {
   return(dt)
 }
 
-#' Validar parámetros de entrada / Validate input parameters
+#' Validar parametros de entrada / Validate input parameters
 #' @noRd
 validate_dataset_id <- function(dataset_id) {
   if (!is.character(dataset_id) || length(dataset_id) != 1 || nchar(dataset_id) == 0) {
-    stop("dataset_id debe ser una cadena de caracteres no vacía / dataset_id must be a non-empty character string")
+    stop("dataset_id debe ser una cadena de caracteres no vacia / dataset_id must be a non-empty character string")
   }
 }
 
-#' Formatear bytes a tamaño legible / Format bytes to human readable size
+#' Formatear bytes a tamano legible / Format bytes to human readable size
 #' @noRd
 format_bytes <- function(bytes) {
   if (bytes < 1024) return(paste(bytes, "B"))
@@ -126,7 +127,7 @@ extract_dcat_metadata <- function(ckan_response) {
   
   result <- ckan_response$result
   
-  # Mapear campos CKAN a términos DCAT / Map CKAN fields to DCAT terms
+  # Mapear campos CKAN a terminos DCAT / Map CKAN fields to DCAT terms
   dcat_metadata <- list(
     `dct:identifier` = result$id,
     `dct:title` = result$title,
@@ -145,14 +146,14 @@ extract_dcat_metadata <- function(ckan_response) {
   return(dcat_metadata)
 }
 
-#' Manejo seguro de errores con caché / Safe error handling with cache
+#' Manejo seguro de errores con cache / Safe error handling with cache
 #' @noRd
 with_cache_fallback <- function(expr, cache_path, error_msg) {
   tryCatch({
     expr
   }, error = function(e) {
     if (file.exists(cache_path)) {
-      futile.logger::flog.warn(paste(error_msg, "- usando caché / using cache"))
+      futile.logger::flog.warn(paste(error_msg, "- usando cache / using cache"))
       return(readRDS(cache_path))
     } else {
       stop(e)

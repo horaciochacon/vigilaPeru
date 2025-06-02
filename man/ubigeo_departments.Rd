@@ -7,7 +7,7 @@
 ubigeo_departments()
 }
 \value{
-data.table con códigos y nombres de departamentos / data.table with department codes and names
+data.table con codigos y nombres de departamentos / data.table with department codes and names
 }
 \description{
 Tabla de referencia de departamentos / Department reference table

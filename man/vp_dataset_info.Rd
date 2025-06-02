@@ -2,7 +2,7 @@
 % Please edit documentation in R/datasets.R
 \name{vp_dataset_info}
 \alias{vp_dataset_info}
-\title{Información detallada de datasets / Detailed dataset information}
+\title{Informacion detallada de datasets / Detailed dataset information}
 \usage{
 vp_dataset_info(dataset = NULL)
 }
@@ -11,19 +11,19 @@ vp_dataset_info(dataset = NULL)
 / Dataset name ("malaria", "dengue", etc.) or NULL for all.}
 }
 \value{
-Lista con información detallada / List with detailed information
+Lista con informacion detallada / List with detailed information
 }
 \description{
-Muestra información detallada de los datasets disponibles, incluyendo
-descripción de variables y recursos.
+Muestra informacion detallada de los datasets disponibles, incluyendo
+descripcion de variables y recursos.
 
 Shows detailed information about available datasets, including
 variable descriptions and resources.
 }
 \examples{
-# Información de malaria / Malaria information
+# Informacion de malaria / Malaria information
 vp_dataset_info("malaria")
 
-# Información de todos los datasets / All datasets information
+# Informacion de todos los datasets / All datasets information
 vp_dataset_info()
 }

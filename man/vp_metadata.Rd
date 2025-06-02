@@ -10,7 +10,7 @@ vp_metadata(dataset, refresh = FALSE)
 \item{dataset}{Nombre del dataset ("malaria", "dengue", etc.)
 / Dataset name ("malaria", "dengue", etc.)}
 
-\item{refresh}{Lógico. Si TRUE, actualiza la información desde el portal.
+\item{refresh}{Logico. Si TRUE, actualiza la informacion desde el portal.
 / Logical. If TRUE, refreshes information from the portal.}
 }
 \value{
@@ -18,7 +18,7 @@ Lista con metadatos DCAT / List with DCAT metadata
 }
 \description{
 Recupera los metadatos completos de un dataset en formato DCAT/DCAP-AP,
-incluyendo información sobre recursos, distribuciones y términos de uso.
+incluyendo informacion sobre recursos, distribuciones y terminos de uso.
 
 Retrieves complete dataset metadata in DCAT/DCAP-AP format,
 including information about resources, distributions and terms of use.
@@ -27,7 +27,7 @@ including information about resources, distributions and terms of use.
 # Obtener metadatos de malaria / Get malaria metadata
 metadata <- vp_metadata("malaria")
 
-# Ver términos DCAT disponibles / View available DCAT terms
+# Ver terminos DCAT disponibles / View available DCAT terms
 names(metadata)
 
 # Acceder a distribuciones / Access distributions
