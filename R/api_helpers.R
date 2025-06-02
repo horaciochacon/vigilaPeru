@@ -44,15 +44,15 @@ ckan_request <- function(action, params = list(), timeout = 30) {
   return(content)
 }
 
-#' Buscar datasets por organización y etiquetas / Search datasets by organization and tags
+#' Buscar datasets por organizaci\u00f3n y etiquetas / Search datasets by organization and tags
 #' @noRd
 search_cdc_datasets <- function(rows = 1000, start = 0) {
-  # package_search no está disponible en este portal
+  # package_search no est\u00e1 disponible en este portal
   # package_search is not available on this portal
-  # Retornamos una lista vacía o usamos datasets conocidos
+  # Retornamos una lista vac\u00eda o usamos datasets conocidos
   # Return empty list or use known datasets
   
-  warning("La búsqueda de datasets no está disponible en este portal. Usando lista predefinida. / Dataset search not available on this portal. Using predefined list.")
+  warning("La b\u00fasqueda de datasets no est\u00e1 disponible en este portal. Usando lista predefinida. / Dataset search not available on this portal. Using predefined list.")
   
   # Retornar estructura similar a package_search con datasets conocidos
   # Return structure similar to package_search with known datasets
@@ -61,13 +61,13 @@ search_cdc_datasets <- function(rows = 1000, start = 0) {
     results = lapply(names(KNOWN_DATASETS), function(name) {
       list(
         name = KNOWN_DATASETS[[name]],
-        title = paste("Vigilancia epidemiológica de", name)
+        title = paste("Vigilancia epidemiol\u00f3gica de", name)
       )
     })
   ))
 }
 
-#' Obtener metadatos de un dataset específico / Get metadata for specific dataset
+#' Obtener metadatos de un dataset espec\u00edfico / Get metadata for specific dataset
 #' @noRd
 get_dataset_metadata <- function(dataset_id) {
   params <- list(id = dataset_id)
@@ -77,7 +77,7 @@ get_dataset_metadata <- function(dataset_id) {
   # Normalize data structure (convert arrays to single values)
   metadata <- result$result
   
-  # Función auxiliar para extraer primer elemento de arrays
+  # Funci\u00f3n auxiliar para extraer primer elemento de arrays
   # Helper function to extract first element from arrays
   extract_first <- function(x) {
     if (is.list(x) && length(x) == 1) x[[1]] else x
@@ -90,7 +90,7 @@ get_dataset_metadata <- function(dataset_id) {
     }
   }
   
-  # Normalizar organización si existe / Normalize organization if exists
+  # Normalizar organizaci\u00f3n si existe / Normalize organization if exists
   if (!is.null(metadata$organization)) {
     for (field in names(metadata$organization)) {
       metadata$organization[[field]] <- extract_first(metadata$organization[[field]])
@@ -100,7 +100,7 @@ get_dataset_metadata <- function(dataset_id) {
   return(metadata)
 }
 
-#' Obtener información de un recurso específico / Get information for specific resource
+#' Obtener informaci\u00f3n de un recurso espec\u00edfico / Get information for specific resource
 #' @noRd
 get_resource_info <- function(resource_id) {
   params <- list(id = resource_id)
@@ -111,13 +111,13 @@ get_resource_info <- function(resource_id) {
 #' Mapeo de nombres conocidos a IDs de dataset / Mapping of known names to dataset IDs
 #' @noRd
 KNOWN_DATASETS <- list(
-  malaria = "vigilancia-epidemiológica-de-malaria",
-  dengue = "vigilancia-epidemiológica-de-dengue",
-  leishmaniasis = "vigilancia-epidemiológica-de-leishmaniosis",
-  zoonosis = "vigilancia-epidemiológica-de-las-zoonosis",
+  malaria = "vigilancia-epidemiol\u00f3gica-de-malaria",
+  dengue = "vigilancia-epidemiol\u00f3gica-de-dengue",
+  leishmaniasis = "vigilancia-epidemiol\u00f3gica-de-leishmaniosis",
+  zoonosis = "vigilancia-epidemiol\u00f3gica-de-las-zoonosis",
   ira = "vigilancia-epidemiologica-de-infecciones-respiratoiras-agudas-ira",
-  carrion = "vigilancia-epidemiológica-de-enfermedad-de-carrión",
-  eda = "vigilancia-epidemiológica-de-enfermedad-diarreica-aguda-eda"
+  carrion = "vigilancia-epidemiol\u00f3gica-de-enfermedad-de-carri\u00f3n",
+  eda = "vigilancia-epidemiol\u00f3gica-de-enfermedad-diarreica-aguda-eda"
 )
 
 #' Resolver nombre de dataset a ID / Resolve dataset name to ID
@@ -143,7 +143,7 @@ resolve_dataset_id <- function(dataset_name) {
     }
   }
   
-  stop(sprintf("No se encontró el dataset '%s' / Dataset '%s' not found", 
+  stop(sprintf("No se encontr\u00f3 el dataset '%s' / Dataset '%s' not found", 
                dataset_name, dataset_name))
 }
 
@@ -166,7 +166,7 @@ extract_csv_resources <- function(dataset_metadata) {
     stop("No se encontraron recursos CSV en este dataset / No CSV resources found in this dataset")
   }
   
-  # Ordenar por fecha de modificación (más reciente primero) / Sort by modification date (most recent first)
+  # Ordenar por fecha de modificaci\u00f3n (m\u00e1s reciente primero) / Sort by modification date (most recent first)
   csv_resources <- csv_resources[order(sapply(csv_resources, function(r) {
     lm <- if(is.list(r$last_modified)) r$last_modified[[1]] else r$last_modified
     lm
@@ -196,14 +196,14 @@ check_portal_status <- function() {
   })
 }
 
-#' Obtener información resumida de recursos / Get summarized resource information
+#' Obtener informaci\u00f3n resumida de recursos / Get summarized resource information
 #' @noRd
 summarize_resources <- function(resources) {
   data.frame(
     id = sapply(resources, function(r) r$id),
     nombre = sapply(resources, function(r) r$name),
     formato = sapply(resources, function(r) r$format),
-    tamaño = sapply(resources, function(r) format_bytes(as.numeric(r$size))),
+    tama\u00f1o = sapply(resources, function(r) format_bytes(as.numeric(r$size))),
     modificado = sapply(resources, function(r) r$last_modified),
     stringsAsFactors = FALSE
   )

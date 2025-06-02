@@ -1,23 +1,25 @@
-#' Agregación rápida de datos epidemiológicos / Fast aggregation of epidemiological data
+#' Agregaci\u00f3n r\u00e1pida de datos epidemiol\u00f3gicos / Fast aggregation of epidemiological data
 #'
 #' @description
-#' Realiza agregaciones rápidas de datos epidemiológicos usando data.table.
-#' Soporta agrupación flexible por múltiples variables y cálculo de estadísticas.
+#' Realiza agregaciones r\u00e1pidas de datos epidemiol\u00f3gicos usando data.table.
+#' Soporta agrupaci\u00f3n flexible por m\u00faltiples variables y c\u00e1lculo de estad\u00edsticas.
 #' 
 #' Performs fast aggregations of epidemiological data using data.table.
 #' Supports flexible grouping by multiple variables and statistics calculation.
 #'
-#' @param data data.table o data.frame con datos epidemiológicos.
+#' @importFrom data.table := .N data.table
+#'
+#' @param data data.table o data.frame con datos epidemiol\u00f3gicos.
 #'   / data.table or data.frame with epidemiological data.
-#' @param by Vector de caracteres o lista con variables de agrupación.
+#' @param by Vector de caracteres o lista con variables de agrupaci\u00f3n.
 #'   / Character vector or list with grouping variables.
 #' @param summarize Lista con funciones de resumen a aplicar.
 #'   / List with summary functions to apply.
-#' @param cases_col Nombre de la columna de casos (por defecto busca automáticamente).
+#' @param cases_col Nombre de la columna de casos (por defecto busca autom\u00e1ticamente).
 #'   / Name of cases column (default searches automatically).
-#' @param as_tibble Lógico. Si TRUE (predeterminado), devuelve un tibble.
+#' @param as_tibble L\u00f3gico. Si TRUE (predeterminado), devuelve un tibble.
 #'   / Logical. If TRUE (default), returns a tibble.
-#' @param na.rm Lógico. Si TRUE, elimina valores NA en cálculos.
+#' @param na.rm L\u00f3gico. Si TRUE, elimina valores NA en c\u00e1lculos.
 #'   / Logical. If TRUE, removes NA values in calculations.
 #'
 #' @return data.table o tibble con datos agregados / data.table or tibble with aggregated data
@@ -27,13 +29,13 @@
 #' # Cargar datos de malaria / Load malaria data
 #' mal <- vp_download("malaria")
 #' 
-#' # Agregar por año y departamento / Aggregate by year and department
+#' # Agregar por a\u00f1o y departamento / Aggregate by year and department
 #' agg1 <- vp_aggregate(mal, by = c("ano", "departamento"))
 #' 
-#' # Agregar por semana epidemiológica / Aggregate by epidemiological week
+#' # Agregar por semana epidemiol\u00f3gica / Aggregate by epidemiological week
 #' agg2 <- vp_aggregate(mal, by = list(year = ano, week = semana))
 #' 
-#' # Agregar con múltiples estadísticas / Aggregate with multiple statistics
+#' # Agregar con m\u00faltiples estad\u00edsticas / Aggregate with multiple statistics
 #' agg3 <- vp_aggregate(mal, 
 #'   by = c("ano", "sexo"),
 #'   summarize = list(
@@ -147,23 +149,23 @@ vp_aggregate <- function(data,
   return(maybe_as_tibble(result, as_tibble))
 }
 
-#' Agregación por ubicación geográfica / Aggregation by geographic location
+#' Agregaci\u00f3n por ubicaci\u00f3n geogr\u00e1fica / Aggregation by geographic location
 #'
 #' @description
-#' Agrega datos por niveles geográficos usando códigos ubigeo.
+#' Agrega datos por niveles geogr\u00e1ficos usando c\u00f3digos ubigeo.
 #' 
 #' Aggregates data by geographic levels using ubigeo codes.
 #'
 #' @param data data.table o data.frame con columna ubigeo.
 #'   / data.table or data.frame with ubigeo column.
-#' @param level Nivel geográfico: "departamento", "provincia", "distrito".
+#' @param level Nivel geogr\u00e1fico: "departamento", "provincia", "distrito".
 #'   / Geographic level: "departamento", "provincia", "distrito".
-#' @param include_totals Lógico. Si TRUE, incluye totales nacionales.
+#' @param include_totals L\u00f3gico. Si TRUE, incluye totales nacionales.
 #'   / Logical. If TRUE, includes national totals.
 #' @param ... Argumentos adicionales para vp_aggregate.
 #'   / Additional arguments for vp_aggregate.
 #'
-#' @return data.table o tibble con datos agregados por ubicación / data.table or tibble aggregated by location
+#' @return data.table o tibble con datos agregados por ubicaci\u00f3n / data.table or tibble aggregated by location
 #' @export
 #'
 #' @examples
@@ -229,18 +231,18 @@ vp_aggregate_geo <- function(data,
   return(result)
 }
 
-#' Agregación temporal (series de tiempo) / Temporal aggregation (time series)
+#' Agregaci\u00f3n temporal (series de tiempo) / Temporal aggregation (time series)
 #'
 #' @description
-#' Agrega datos por períodos de tiempo: semana, mes, trimestre, año.
+#' Agrega datos por per\u00edodos de tiempo: semana, mes, trimestre, a\u00f1o.
 #' 
 #' Aggregates data by time periods: week, month, quarter, year.
 #'
 #' @param data data.table o data.frame con columnas temporales.
 #'   / data.table or data.frame with temporal columns.
-#' @param period Período de agregación: "semana", "mes", "trimestre", "año".
+#' @param period Per\u00edodo de agregaci\u00f3n: "semana", "mes", "trimestre", "a\u00f1o".
 #'   / Aggregation period: "semana", "mes", "trimestre", "año".
-#' @param date_cols Lista con nombres de columnas de fecha (año, semana, etc.).
+#' @param date_cols Lista con nombres de columnas de fecha (a\u00f1o, semana, etc.).
 #'   / List with date column names (year, week, etc.).
 #' @param ... Argumentos adicionales para vp_aggregate.
 #'   / Additional arguments for vp_aggregate.
@@ -255,7 +257,7 @@ vp_aggregate_geo <- function(data,
 #' # Serie trimestral por sexo / Quarterly series by sex
 #' mal_trim <- vp_aggregate_time(mal, period = "trimestre", by = "sexo")
 vp_aggregate_time <- function(data,
-                             period = c("semana", "mes", "trimestre", "año"),
+                             period = c("semana", "mes", "trimestre", "a\u00f1o"),
                              date_cols = NULL,
                              ...) {
   
@@ -268,14 +270,14 @@ vp_aggregate_time <- function(data,
   
   # Detectar columnas de fecha si no se especifican / Detect date columns if not specified
   if (is.null(date_cols)) {
-    year_cols <- c("ano", "año", "year", "anio")
+    year_cols <- c("ano", "a\u00f1o", "year", "anio")
     week_cols <- c("semana", "week", "semana_epidemiologica", "epiweek")
     
     year_col <- intersect(names(data), year_cols)[1]
     week_col <- intersect(names(data), week_cols)[1]
     
     if (is.na(year_col)) {
-      stop("No se encontró columna de año / Year column not found")
+      stop("No se encontr\u00f3 columna de a\u00f1o / Year column not found")
     }
     
     date_cols <- list(year = year_col, week = week_col)
@@ -286,7 +288,7 @@ vp_aggregate_time <- function(data,
   # Crear columnas temporales según período / Create temporal columns by period
   if (period == "semana") {
     if (is.na(date_cols$week)) {
-      stop("No se encontró columna de semana / Week column not found")
+      stop("No se encontr\u00f3 columna de semana / Week column not found")
     }
     by_vars <- c(date_cols$year, date_cols$week)
   } else if (period == "mes") {
@@ -306,7 +308,7 @@ vp_aggregate_time <- function(data,
     }
     by_vars <- c(date_cols$year, "trimestre")
   } else {
-    # Año / Year
+    # A\u00f1o / Year
     by_vars <- date_cols$year
   }
   

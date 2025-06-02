@@ -10,3 +10,7 @@
 ^\.pre-commit-config\.yaml$
 ^codecov\.yml$
 ^\.lintr$
+^_quarto\.yml$
+^GITHUB_SETUP\.md$
+^index\.qmd$
+^vignettes-quarto$

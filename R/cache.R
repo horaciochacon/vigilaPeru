@@ -5,6 +5,8 @@
 #' 
 #' `vp_cache_dir()` returns or sets the cache directory path for vigilaPeru.
 #'
+#' @importFrom stats aggregate
+#'
 #' @param path Ruta al nuevo directorio de caché. Si es NULL, devuelve la ruta actual.
 #'   / Path to new cache directory. If NULL, returns current path.
 #'

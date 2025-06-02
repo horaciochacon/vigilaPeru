@@ -12,6 +12,10 @@
 #' - DD: Department (2 digits)
 #' - PP: Province (2 digits)
 #' - TT: District (2 digits)
+#' @importFrom data.table := .N data.table
+#' @importFrom stats aggregate
+#' @name vigilaPeru-imports
+NULL
 
 #' Extraer departamento de UBIGEO / Extract department from UBIGEO
 #'

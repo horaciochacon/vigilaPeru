@@ -85,7 +85,7 @@ mock_ckan_response <- function(success = TRUE, dataset_id = "test-dataset") {
       success = FALSE,
       error = list(
         message = "Dataset not found",
-        __type = "Not Found Error"
+        type = "Not Found Error"
       )
     )
   }

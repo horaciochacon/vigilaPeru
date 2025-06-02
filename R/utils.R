@@ -1,5 +1,6 @@
 #' Funciones de utilidad internas / Internal utility functions
 #' @noRd
+NULL
 
 #' Verificar conexión a internet / Check internet connection
 #' @noRd
