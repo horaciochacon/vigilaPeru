@@ -2,7 +2,7 @@
 % Please edit documentation in R/aggregate.R
 \name{vp_aggregate_geo}
 \alias{vp_aggregate_geo}
-\title{Agregación por ubicación geográfica / Aggregation by geographic location}
+\title{Agregaci\u00f3n por ubicaci\u00f3n geogr\u00e1fica / Aggregation by geographic location}
 \usage{
 vp_aggregate_geo(
   data,
@@ -15,20 +15,20 @@ vp_aggregate_geo(
 \item{data}{data.table o data.frame con columna ubigeo.
 / data.table or data.frame with ubigeo column.}
 
-\item{level}{Nivel geográfico: "departamento", "provincia", "distrito".
+\item{level}{Nivel geogr\u00e1fico: "departamento", "provincia", "distrito".
 / Geographic level: "departamento", "provincia", "distrito".}
 
-\item{include_totals}{Lógico. Si TRUE, incluye totales nacionales.
+\item{include_totals}{L\u00f3gico. Si TRUE, incluye totales nacionales.
 / Logical. If TRUE, includes national totals.}
 
 \item{...}{Argumentos adicionales para vp_aggregate.
 / Additional arguments for vp_aggregate.}
 }
 \value{
-data.table o tibble con datos agregados por ubicación / data.table or tibble aggregated by location
+data.table o tibble con datos agregados por ubicaci\u00f3n / data.table or tibble aggregated by location
 }
 \description{
-Agrega datos por niveles geográficos usando códigos ubigeo.
+Agrega datos por niveles geogr\u00e1ficos usando c\u00f3digos ubigeo.
 
 Aggregates data by geographic levels using ubigeo codes.
 }

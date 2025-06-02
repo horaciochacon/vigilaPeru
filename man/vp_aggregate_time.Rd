@@ -2,7 +2,7 @@
 % Please edit documentation in R/aggregate.R
 \name{vp_aggregate_time}
 \alias{vp_aggregate_time}
-\title{Agregación temporal (series de tiempo) / Temporal aggregation (time series)}
+\title{Agregaci\u00f3n temporal (series de tiempo) / Temporal aggregation (time series)}
 \usage{
 vp_aggregate_time(
   data,
@@ -15,10 +15,10 @@ vp_aggregate_time(
 \item{data}{data.table o data.frame con columnas temporales.
 / data.table or data.frame with temporal columns.}
 
-\item{period}{Período de agregación: "semana", "mes", "trimestre", "año".
+\item{period}{Per\u00edodo de agregaci\u00f3n: "semana", "mes", "trimestre", "a\u00f1o".
 / Aggregation period: "semana", "mes", "trimestre", "año".}
 
-\item{date_cols}{Lista con nombres de columnas de fecha (año, semana, etc.).
+\item{date_cols}{Lista con nombres de columnas de fecha (a\u00f1o, semana, etc.).
 / List with date column names (year, week, etc.).}
 
 \item{...}{Argumentos adicionales para vp_aggregate.
@@ -28,7 +28,7 @@ vp_aggregate_time(
 data.table o tibble con serie temporal / data.table or tibble with time series
 }
 \description{
-Agrega datos por períodos de tiempo: semana, mes, trimestre, año.
+Agrega datos por per\u00edodos de tiempo: semana, mes, trimestre, a\u00f1o.
 
 Aggregates data by time periods: week, month, quarter, year.
 }
