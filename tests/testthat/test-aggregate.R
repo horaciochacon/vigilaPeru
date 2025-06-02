@@ -88,7 +88,7 @@ test_that("vp_aggregate_time works with different periods", {
   expect_equal(nrow(result_quarter), 4)
   
   # Test yearly aggregation
-  result_year <- vp_aggregate_time(test_data, period = "año")
+  result_year <- vp_aggregate_time(test_data, period = "ano")
   expect_equal(nrow(result_year), 1)
 })
 

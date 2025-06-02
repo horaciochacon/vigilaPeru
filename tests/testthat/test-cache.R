@@ -15,6 +15,7 @@ test_that("cache directory functions work", {
   info <- vp_cache_info()
   expect_true(is.data.frame(info$resumen))
   expect_true("directorio" %in% names(info$resumen))
+  expect_true("archivos_total" %in% names(info$resumen))
   
   # Clean up
   unlink(new_cache, recursive = TRUE)
@@ -32,7 +33,11 @@ test_that("cache clear functions work", {
   saveRDS(list(test = "data"), test_file1)
   saveRDS(list(test = "data2"), test_file2)
   
-  # Test clearing specific dataset
+  # Test clearing specific dataset  
+  # Temporarily suppress logging to avoid output during tests
+  old_threshold <- futile.logger::flog.threshold()
+  futile.logger::flog.threshold(futile.logger::ERROR)
+  
   expect_silent(vp_cache_clear("test"))
   expect_false(file.exists(test_file1))
   expect_true(file.exists(test_file2))
@@ -42,6 +47,9 @@ test_that("cache clear functions work", {
   expect_silent(vp_cache_clear())
   expect_false(file.exists(test_file1))
   expect_false(file.exists(test_file2))
+  
+  # Restore original logging threshold
+  futile.logger::flog.threshold(old_threshold)
   
   # Clean up
   unlink(temp_cache, recursive = TRUE)

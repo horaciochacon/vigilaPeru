@@ -39,12 +39,12 @@ test_that("logging setup works", {
   # Test verbose mode
   setup_logging(verbose = TRUE)
   threshold <- futile.logger::flog.threshold()
-  expect_equal(threshold, futile.logger::INFO)
+  expect_equal(threshold, "INFO")
   
   # Test quiet mode
   setup_logging(verbose = FALSE)
   threshold <- futile.logger::flog.threshold()
-  expect_equal(threshold, futile.logger::WARN)
+  expect_equal(threshold, "WARN")
 })
 
 test_that("date parsing from portal format works", {

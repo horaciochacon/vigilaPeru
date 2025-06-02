@@ -147,24 +147,40 @@ vp_cache_info <- function() {
   cache_dir <- vp_cache_dir()
   
   if (!dir.exists(cache_dir)) {
-    return(data.frame(
-      directorio = cache_dir,
-      existe = FALSE,
-      archivos = 0,
-      tamano_mb = 0,
-      stringsAsFactors = FALSE
+    return(list(
+      resumen = data.frame(
+        directorio = cache_dir,
+        existe = FALSE,
+        archivos_total = 0,
+        tamano_total_mb = 0,
+        stringsAsFactors = FALSE
+      ),
+      por_dataset = data.frame(
+        dataset = character(0),
+        tamano_mb = numeric(0),
+        archivos = integer(0),
+        stringsAsFactors = FALSE
+      )
     ))
   }
   
   files <- list.files(cache_dir, full.names = TRUE, recursive = TRUE)
   
   if (length(files) == 0) {
-    return(data.frame(
-      directorio = cache_dir,
-      existe = TRUE,
-      archivos = 0,
-      tamano_mb = 0,
-      stringsAsFactors = FALSE
+    return(list(
+      resumen = data.frame(
+        directorio = cache_dir,
+        existe = TRUE,
+        archivos_total = 0,
+        tamano_total_mb = 0,
+        stringsAsFactors = FALSE
+      ),
+      por_dataset = data.frame(
+        dataset = character(0),
+        tamano_mb = numeric(0),
+        archivos = integer(0),
+        stringsAsFactors = FALSE
+      )
     ))
   }
   
