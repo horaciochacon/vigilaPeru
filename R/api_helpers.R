@@ -203,7 +203,7 @@ summarize_resources <- function(resources) {
     id = sapply(resources, function(r) r$id),
     nombre = sapply(resources, function(r) r$name),
     formato = sapply(resources, function(r) r$format),
-    tama\u00f1o = sapply(resources, function(r) format_bytes(as.numeric(r$size))),
+    "tama\u00f1o" = sapply(resources, function(r) format_bytes(as.numeric(r$size))),
     modificado = sapply(resources, function(r) r$last_modified),
     stringsAsFactors = FALSE
   )

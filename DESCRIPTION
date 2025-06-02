@@ -2,8 +2,8 @@ Package: vigilaPeru
 Title: Access Peru's National Epidemiological Surveillance Datasets
 Version: 0.0.0.9000
 Authors@R: 
-    person("Horacio", "Chacón Torrico", , "hchacont@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+    person("Horacio", "Chacón Torrico", , "hchacont@gmail.com", role = c("aut", "cre"))
+Depends: R (>= 4.1.0)
 Description: Fast, reproducible access to Peru's national epidemiological surveillance 
     datasets (Ministry of Health / CDC-Peru) published on the Plataforma Nacional de 
     Datos Abiertos. Provides live CKAN API client functionality with caching, ready-made 
