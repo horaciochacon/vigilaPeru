@@ -1,4 +1,4 @@
-url: https://YOUR_USERNAME.github.io/vigilaPeru/
+url: https://horaciochacon.github.io/vigilaPeru/
 
 template:
   bootstrap: 5
@@ -14,7 +14,7 @@ home:
   
 authors:
   Horacio Chacón Torrico:
-    href: https://github.com/YOUR_USERNAME
+    href: https://github.com/horaciochacon
 
 navbar:
   title: "vigilaPeru"
@@ -33,7 +33,7 @@ navbar:
           href: articles/extending-to-other-diseases.html
   right:
     - icon: fa-github
-      href: https://github.com/YOUR_USERNAME/vigilaPeru
+      href: https://github.com/horaciochacon/vigilaPeru
 
 reference:
 - title: "Funciones Principales / Main Functions"

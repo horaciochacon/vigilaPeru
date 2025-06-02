@@ -24,7 +24,7 @@ R tools for fast, reproducible access to Peru's national **epidemiological surve
 
 ```r
 # Install development version from GitHub
-remotes::install_github("your-org/vigilaPeru")
+remotes::install_github("horaciochacon/vigilaPeru")
 ```
 
 ## Quick Start
