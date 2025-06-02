@@ -33,9 +33,14 @@ Agrega datos por niveles geogr\u00e1ficos usando c\u00f3digos ubigeo.
 Aggregates data by geographic levels using ubigeo codes.
 }
 \examples{
+\dontrun{
+# Cargar datos de malaria / Load malaria data
+mal <- vp_download("malaria")
+
 # Agregar por departamento / Aggregate by department
 mal_dep <- vp_aggregate_geo(mal, level = "departamento")
 
 # Agregar por provincia con totales / Aggregate by province with totals
 mal_prov <- vp_aggregate_geo(mal, level = "provincia", include_totals = TRUE)
+}
 }

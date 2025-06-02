@@ -33,9 +33,14 @@ Agrega datos por per\u00edodos de tiempo: semana, mes, trimestre, a\u00f1o.
 Aggregates data by time periods: week, month, quarter, year.
 }
 \examples{
+\dontrun{
+# Cargar datos de malaria / Load malaria data
+mal <- vp_download("malaria")
+
 # Serie mensual / Monthly series
 mal_mensual <- vp_aggregate_time(mal, period = "mes")
 
 # Serie trimestral por sexo / Quarterly series by sex
 mal_trim <- vp_aggregate_time(mal, period = "trimestre", by = "sexo")
+}
 }

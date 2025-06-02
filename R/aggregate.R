@@ -51,6 +51,9 @@ vp_aggregate <- function(data,
                         as_tibble = TRUE,
                         na.rm = TRUE) {
   
+  # Ensure na.rm is a single logical value
+  na.rm <- isTRUE(na.rm[1])
+  
   # Convertir a data.table si no lo es / Convert to data.table if not
   if (!data.table::is.data.table(data)) {
     data <- data.table::as.data.table(data)
@@ -59,7 +62,7 @@ vp_aggregate <- function(data,
   # Detectar columna de casos si no se especifica / Detect cases column if not specified
   if (is.null(cases_col)) {
     # Buscar columnas que puedan contener conteos / Look for columns that might contain counts
-    potential_cols <- c("casos", "cases", "cantidad", "count", "n", "total",
+    potential_cols <- c("casos", "cases", "cantidad", "count", "n", "total", "value",
                        "vivax", "falciparum", "confirmados", "probables", "sospechosos")
     
     # Verificar cuáles existen / Check which exist
@@ -121,7 +124,33 @@ vp_aggregate <- function(data,
     
     for (stat_name in names(summarize)) {
       func <- summarize[[stat_name]]
-      if (na.rm) {
+      
+      # Get function name more robustly
+      if (is.function(func)) {
+        # Try to get function name from the function itself
+        func_name <- tryCatch({
+          # First try to match against known functions
+          if (identical(func, sum)) "sum"
+          else if (identical(func, mean)) "mean"
+          else if (identical(func, median)) "median"
+          else if (identical(func, min)) "min"
+          else if (identical(func, max)) "max"
+          else if (identical(func, sd)) "sd"
+          else if (identical(func, var)) "var"
+          else if (identical(func, mad)) "mad"
+          else if (identical(func, length)) "length"
+          else if (identical(func, quantile)) "quantile"
+          else "unknown"
+        }, error = function(e) {
+          "unknown"
+        })
+      } else {
+        func_name <- as.character(func)
+      }
+      
+      # Check if function accepts na.rm parameter
+      accepts_na_rm <- any(func_name %in% c("sum", "mean", "median", "min", "max", "sd", "var", "mad", "quantile"))
+      if (na.rm && accepts_na_rm) {
         agg_list[[stat_name]] <- substitute(
           func(col, na.rm = TRUE),
           list(func = func, col = as.name(cases_col))
@@ -169,17 +198,26 @@ vp_aggregate <- function(data,
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' # Cargar datos de malaria / Load malaria data
+#' mal <- vp_download("malaria")
+#' 
 #' # Agregar por departamento / Aggregate by department
 #' mal_dep <- vp_aggregate_geo(mal, level = "departamento")
 #' 
 #' # Agregar por provincia con totales / Aggregate by province with totals
 #' mal_prov <- vp_aggregate_geo(mal, level = "provincia", include_totals = TRUE)
+#' }
 vp_aggregate_geo <- function(data, 
                             level = c("departamento", "provincia", "distrito"),
                             include_totals = FALSE,
                             ...) {
   
   level <- match.arg(level)
+  
+  # Extract additional arguments, excluding 'by' since we set it ourselves
+  extra_args <- list(...)
+  extra_args$by <- NULL
   
   # Verificar que existe columna ubigeo / Check ubigeo column exists
   if (!"ubigeo" %in% names(data)) {
@@ -197,35 +235,47 @@ vp_aggregate_geo <- function(data,
   
   if (level == "departamento") {
     dt_copy[, dep_code := substr(as.character(ubigeo), 1, 2)]
-    result <- vp_aggregate(dt_copy, by = "dep_code", ...)
+    result <- do.call(vp_aggregate, c(list(data = dt_copy, by = "dep_code"), extra_args))
     data.table::setnames(result, "dep_code", "departamento_codigo")
   } else if (level == "provincia") {
     dt_copy[, `:=`(
       dep_code = substr(as.character(ubigeo), 1, 2),
       prov_code = substr(as.character(ubigeo), 1, 4)
     )]
-    result <- vp_aggregate(dt_copy, by = c("dep_code", "prov_code"), ...)
+    result <- do.call(vp_aggregate, c(list(data = dt_copy, by = c("dep_code", "prov_code")), extra_args))
     data.table::setnames(result, 
                         c("dep_code", "prov_code"), 
                         c("departamento_codigo", "provincia_codigo"))
   } else {
     # Distrito - usar ubigeo completo / District - use full ubigeo
-    result <- vp_aggregate(data, by = "ubigeo", ...)
+    result <- do.call(vp_aggregate, c(list(data = data, by = "ubigeo"), extra_args))
   }
   
   # Agregar totales si se solicita / Add totals if requested
   if (include_totals) {
-    total_row <- vp_aggregate(data, by = NULL, ...)
+    # For totals, we aggregate the entire dataset without grouping
+    # We'll create a dummy grouping variable and then aggregate
+    data_copy <- data.table::copy(data)
+    data_copy[, dummy_group := "total"]
+    # Force data.table output for totals to use := operator
+    extra_args_dt <- extra_args
+    extra_args_dt$as_tibble <- FALSE
+    total_result <- do.call(vp_aggregate, c(list(data = data_copy, by = "dummy_group"), extra_args_dt))
+    # Convert to data.table and remove dummy column
+    if (!data.table::is.data.table(total_result)) {
+      total_result <- data.table::as.data.table(total_result)
+    }
+    total_result[, dummy_group := NULL]
     
     if (level == "departamento") {
-      total_row[, departamento_codigo := "00"]
+      total_result[, departamento_codigo := "00"]
     } else if (level == "provincia") {
-      total_row[, `:=`(departamento_codigo = "00", provincia_codigo = "0000")]
+      total_result[, `:=`(departamento_codigo = "00", provincia_codigo = "0000")]
     } else {
-      total_row[, ubigeo := "000000"]
+      total_result[, ubigeo := "000000"]
     }
     
-    result <- data.table::rbindlist(list(total_row, result), use.names = TRUE, fill = TRUE)
+    result <- data.table::rbindlist(list(total_result, result), use.names = TRUE, fill = TRUE)
   }
   
   return(result)
@@ -251,11 +301,16 @@ vp_aggregate_geo <- function(data,
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' # Cargar datos de malaria / Load malaria data
+#' mal <- vp_download("malaria")
+#' 
 #' # Serie mensual / Monthly series
 #' mal_mensual <- vp_aggregate_time(mal, period = "mes")
 #' 
 #' # Serie trimestral por sexo / Quarterly series by sex
 #' mal_trim <- vp_aggregate_time(mal, period = "trimestre", by = "sexo")
+#' }
 vp_aggregate_time <- function(data,
                              period = c("semana", "mes", "trimestre", "a\u00f1o"),
                              date_cols = NULL,
