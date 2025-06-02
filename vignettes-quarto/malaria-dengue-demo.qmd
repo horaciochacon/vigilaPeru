@@ -1,0 +1,308 @@
+---
+title: "Análisis de Malaria y Dengue con vigilaPeru"
+subtitle: "Malaria and Dengue Analysis with vigilaPeru"
+author: "vigilaPeru Team"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    code-summary: "Mostrar código / Show code"
+execute:
+  warning: false
+  message: false
+---
+
+```{r setup}
+#| include: false
+library(vigilaPeru)
+library(data.table)
+library(ggplot2)
+library(knitr)
+
+# Configurar opciones / Set options
+options(datatable.print.class = FALSE)
+theme_set(theme_minimal())
+```
+
+## Introducción / Introduction
+
+Este documento demuestra cómo usar el paquete `vigilaPeru` para acceder y analizar datos de vigilancia epidemiológica de malaria y dengue en Perú.
+
+This document demonstrates how to use the `vigilaPeru` package to access and analyze epidemiological surveillance data for malaria and dengue in Peru.
+
+## 1. Acceso a Datos / Data Access
+
+### Listar datasets disponibles / List available datasets
+
+```{r list-datasets}
+# Ver todos los datasets de vigilancia / View all surveillance datasets
+datasets <- vp_datasets()
+kable(datasets[1:5, c("nombre", "titulo", "recursos", "modificado")])
+```
+
+### Descargar datos de malaria / Download malaria data
+
+```{r download-malaria}
+#| cache: true
+# Descargar datos de malaria / Download malaria data
+malaria <- vp_download("malaria", resource_index = 2)  # 2009-2023 dataset
+
+# Explorar estructura / Explore structure
+dim(malaria)
+names(malaria)
+```
+
+```{r malaria-summary}
+# Resumen de datos / Data summary
+kable(head(malaria, 10))
+```
+
+### Descargar datos de dengue / Download dengue data
+
+```{r download-dengue}
+#| cache: true
+# Descargar datos de dengue / Download dengue data
+dengue <- vp_download("dengue")
+
+dim(dengue)
+```
+
+## 2. Análisis Temporal / Temporal Analysis
+
+### Tendencia anual de malaria / Annual malaria trend
+
+```{r malaria-annual}
+# Agregar casos por año / Aggregate cases by year
+malaria_anual <- vp_aggregate(malaria, by = "ano")
+
+# Visualizar tendencia / Visualize trend
+ggplot(malaria_anual, aes(x = ano, y = casos)) +
+  geom_line(size = 1.2, color = "#e74c3c") +
+  geom_point(size = 3, color = "#c0392b") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Casos de Malaria en Perú / Malaria Cases in Peru",
+    subtitle = "2009-2023",
+    x = "Año / Year",
+    y = "Número de casos / Number of cases",
+    caption = "Fuente / Source: CDC-Perú via vigilaPeru"
+  ) +
+  theme(plot.title = element_text(face = "bold"))
+```
+
+### Comparación malaria vs dengue / Malaria vs dengue comparison
+
+```{r compare-diseases}
+# Preparar datos para comparación / Prepare data for comparison
+dengue_anual <- vp_aggregate(dengue, by = "ano")
+
+# Combinar datasets / Combine datasets
+malaria_anual$enfermedad <- "Malaria"
+dengue_anual$enfermedad <- "Dengue"
+
+comparacion <- rbind(malaria_anual, dengue_anual)
+
+# Visualizar comparación / Visualize comparison
+ggplot(comparacion, aes(x = ano, y = casos, color = enfermedad)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  scale_color_manual(values = c("Dengue" = "#3498db", "Malaria" = "#e74c3c")) +
+  labs(
+    title = "Malaria vs Dengue en Perú / Malaria vs Dengue in Peru",
+    x = "Año / Year",
+    y = "Casos / Cases",
+    color = "Enfermedad / Disease"
+  ) +
+  theme(legend.position = "bottom")
+```
+
+## 3. Análisis Geográfico / Geographic Analysis
+
+### Distribución por departamento / Distribution by department
+
+```{r geographic-distribution}
+# Agregar por departamento para 2023 / Aggregate by department for 2023
+malaria_2023 <- malaria[ano == 2023]
+mal_dept <- vp_aggregate(malaria_2023, by = "departamento")
+
+# Top 10 departamentos / Top 10 departments
+mal_dept_top <- mal_dept[order(-casos)][1:10]
+
+ggplot(mal_dept_top, aes(x = reorder(departamento, casos), y = casos)) +
+  geom_col(fill = "#e74c3c") +
+  coord_flip() +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Top 10 Departamentos - Malaria 2023",
+    subtitle = "Top 10 Departments - Malaria 2023",
+    x = "Departamento / Department",
+    y = "Casos / Cases"
+  )
+```
+
+### Mapa de calor temporal-geográfico / Temporal-geographic heatmap
+
+```{r heatmap}
+# Agregar por año y departamento / Aggregate by year and department
+mal_year_dept <- vp_aggregate(
+  malaria[ano >= 2019], 
+  by = c("ano", "departamento")
+)
+
+# Seleccionar top departamentos / Select top departments
+top_depts <- mal_year_dept[, .(total = sum(casos)), by = departamento][order(-total)][1:15]$departamento
+mal_heatmap <- mal_year_dept[departamento %in% top_depts]
+
+# Crear mapa de calor / Create heatmap
+ggplot(mal_heatmap, aes(x = ano, y = departamento, fill = casos)) +
+  geom_tile() +
+  scale_fill_gradient2(
+    low = "white",
+    mid = "#f39c12",
+    high = "#c0392b",
+    midpoint = median(mal_heatmap$casos),
+    labels = scales::comma
+  ) +
+  labs(
+    title = "Casos de Malaria por Departamento y Año",
+    subtitle = "Malaria Cases by Department and Year",
+    x = "Año / Year",
+    y = "Departamento / Department",
+    fill = "Casos / Cases"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## 4. Análisis Demográfico / Demographic Analysis
+
+### Distribución por sexo / Distribution by sex
+
+```{r sex-distribution}
+# Agregar por sexo y año / Aggregate by sex and year
+mal_sex_year <- vp_aggregate(malaria, by = c("ano", "sexo"))
+
+ggplot(mal_sex_year, aes(x = ano, y = casos, fill = sexo)) +
+  geom_area(alpha = 0.7) +
+  scale_fill_manual(
+    values = c("M" = "#3498db", "F" = "#e74c3c"),
+    labels = c("M" = "Masculino / Male", "F" = "Femenino / Female")
+  ) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Distribución de Malaria por Sexo",
+    subtitle = "Malaria Distribution by Sex",
+    x = "Año / Year",
+    y = "Casos / Cases",
+    fill = "Sexo / Sex"
+  )
+```
+
+### Análisis por grupo etario / Age group analysis
+
+```{r age-analysis}
+# Categorizar edades / Categorize ages
+malaria_edad <- copy(malaria)
+malaria_edad[tipo_edad == "A", edad_grupo := cut(
+  edad,
+  breaks = c(0, 5, 15, 30, 45, 60, Inf),
+  labels = c("0-4", "5-14", "15-29", "30-44", "45-59", "60+"),
+  include.lowest = TRUE
+)]
+
+# Agregar por grupo etario / Aggregate by age group
+mal_edad <- malaria_edad[!is.na(edad_grupo), .(casos = .N), by = edad_grupo]
+
+ggplot(mal_edad, aes(x = edad_grupo, y = casos)) +
+  geom_col(fill = "#16a085") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Distribución de Malaria por Grupo Etario",
+    subtitle = "Malaria Distribution by Age Group",
+    x = "Grupo Etario / Age Group",
+    y = "Casos / Cases"
+  )
+```
+
+## 5. Series de Tiempo / Time Series
+
+### Patrón estacional / Seasonal pattern
+
+```{r seasonal-pattern}
+# Agregar por semana epidemiológica / Aggregate by epidemiological week
+mal_semana <- vp_aggregate(
+  malaria[ano >= 2019],
+  by = c("ano", "semana")
+)
+
+# Calcular promedio por semana / Calculate average by week
+mal_semana_prom <- mal_semana[, .(casos_promedio = mean(casos)), by = semana]
+
+ggplot(mal_semana_prom, aes(x = semana, y = casos_promedio)) +
+  geom_line(size = 1.2, color = "#2c3e50") +
+  geom_smooth(method = "loess", se = TRUE, alpha = 0.2) +
+  scale_x_continuous(breaks = seq(0, 52, 4)) +
+  labs(
+    title = "Patrón Estacional de Malaria",
+    subtitle = "Seasonal Pattern of Malaria (2019-2023 average)",
+    x = "Semana Epidemiológica / Epidemiological Week",
+    y = "Casos Promedio / Average Cases"
+  )
+```
+
+## 6. Análisis Avanzado / Advanced Analysis
+
+### Tipo de diagnóstico / Diagnosis type
+
+```{r diagnosis-type}
+# Analizar por tipo de diagnóstico / Analyze by diagnosis type
+mal_dx <- vp_aggregate(malaria[ano == 2023], by = c("tipo_dx", "departamento"))
+
+# Calcular proporciones / Calculate proportions
+mal_dx[, total_dept := sum(casos), by = departamento]
+mal_dx[, prop := casos / total_dept]
+
+# Seleccionar departamentos principales / Select main departments
+top_depts_dx <- unique(mal_dx[order(-total_dept)]$departamento)[1:10]
+
+ggplot(mal_dx[departamento %in% top_depts_dx], 
+       aes(x = departamento, y = prop, fill = tipo_dx)) +
+  geom_col() +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_manual(
+    values = c("C" = "#27ae60", "P" = "#f39c12", "S" = "#e74c3c"),
+    labels = c("C" = "Confirmado", "P" = "Probable", "S" = "Sospechoso")
+  ) +
+  coord_flip() +
+  labs(
+    title = "Tipo de Diagnóstico por Departamento (2023)",
+    subtitle = "Diagnosis Type by Department (2023)",
+    x = "Departamento / Department",
+    y = "Proporción / Proportion",
+    fill = "Tipo / Type"
+  )
+```
+
+## Conclusiones / Conclusions
+
+El paquete `vigilaPeru` facilita:
+
+- ✅ Acceso rápido a datos actualizados / Quick access to updated data
+- ✅ Agregaciones eficientes / Efficient aggregations  
+- ✅ Análisis reproducibles / Reproducible analyses
+- ✅ Integración con herramientas de visualización / Integration with visualization tools
+
+### Próximos pasos / Next steps
+
+1. Explorar otros datasets disponibles / Explore other available datasets
+2. Realizar análisis espaciales con datos ubigeo / Perform spatial analyses with ubigeo data
+3. Crear dashboards interactivos / Create interactive dashboards
+4. Integrar con modelos predictivos / Integrate with predictive models
+
+## Información de sesión / Session info
+
+```{r session-info}
+sessionInfo()
+```

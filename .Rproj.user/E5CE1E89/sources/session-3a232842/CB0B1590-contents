@@ -1,0 +1,20 @@
+# Build and install vigilaPeru package
+
+# Change to package directory
+setwd("vigilaPeru")
+
+# Use roxygen2 to update documentation and NAMESPACE
+roxygen2::roxygenize()
+
+# Build the package
+pkgbuild::build()
+
+# Install the package
+install.packages("../vigilaPeru_0.0.0.9000.tar.gz", repos = NULL, type = "source")
+
+# Load the package to verify
+library(vigilaPeru)
+
+# Show exported functions
+cat("Exported functions:\n")
+ls("package:vigilaPeru")

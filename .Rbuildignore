@@ -1,0 +1,12 @@
+^vigilaPeru\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^README\.Rmd$
+^data-raw$
+^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.pre-commit-config\.yaml$
+^codecov\.yml$
+^\.lintr$

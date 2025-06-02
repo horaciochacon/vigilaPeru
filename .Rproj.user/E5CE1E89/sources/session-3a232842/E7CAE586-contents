@@ -1,0 +1,46 @@
+# Simple test of ubigeo functions
+# Run this from the peru_surveillance directory
+
+# Source the functions
+source("vigilaPeru/R/ubigeo_helpers.R")
+
+# Test 1: Department extraction
+cat("Test 1: Department extraction\n")
+cat("ubigeo_get_department('150101'):", ubigeo_get_department("150101"), "\n")
+cat("Expected: 15\n\n")
+
+# Test 2: Province extraction  
+cat("Test 2: Province extraction\n")
+cat("ubigeo_get_province('150101'):", ubigeo_get_province("150101"), "\n")
+cat("Expected: 1501\n\n")
+
+# Test 3: Validation
+cat("Test 3: Validation\n")
+cat("ubigeo_is_valid('150101'):", ubigeo_is_valid("150101"), "\n")
+cat("ubigeo_is_valid('999999'):", ubigeo_is_valid("999999"), "\n")
+cat("Expected: TRUE, FALSE\n\n")
+
+# Test 4: Padding
+cat("Test 4: Padding\n")
+cat("ubigeo_pad('10101'):", ubigeo_pad("10101"), "\n")
+cat("Expected: 010101\n\n")
+
+# Test 5: Department table
+cat("Test 5: Department reference table\n")
+deps <- ubigeo_departments()
+print(head(deps, 5))
+cat("\n")
+
+# Test 6: Aggregation
+cat("Test 6: Geographic aggregation\n")
+library(data.table)
+dt <- data.table(
+  ubigeo = c("150101", "150102", "150201", "130101", "130201"),
+  casos = c(10, 20, 15, 5, 8)
+)
+cat("Original data:\n")
+print(dt)
+
+cat("\nAggregated by department:\n")
+result <- ubigeo_aggregate(dt, level = "department", include_names = TRUE)
+print(result)

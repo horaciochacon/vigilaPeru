@@ -1,0 +1,322 @@
+---
+title: "Extendiendo vigilaPeru a Otras Enfermedades / Extending vigilaPeru to Other Diseases"
+author: "vigilaPeru Development Team"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-float: true
+    code-fold: false
+    code-tools: true
+vignette: >
+  %\VignetteIndexEntry{Extending to Other Diseases}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+## Introducción / Introduction
+
+Esta viñeta muestra cómo extender `vigilaPeru` para trabajar con otros datasets de vigilancia epidemiológica disponibles en el portal de datos abiertos del Perú.
+
+This vignette shows how to extend `vigilaPeru` to work with other epidemiological surveillance datasets available on Peru's open data portal.
+
+## Descubriendo Nuevos Datasets / Discovering New Datasets
+
+```{r discover}
+library(vigilaPeru)
+
+# Descubrir todos los datasets con tag de vigilancia epidemiológica
+# Discover all datasets with epidemiological surveillance tag
+all_datasets <- vp_discover_datasets(cache_results = TRUE)
+
+# Ver estructura de la información
+# View information structure
+str(all_datasets[1:2])
+
+# Datasets disponibles / Available datasets
+cat("Datasets encontrados / Datasets found:", nrow(all_datasets), "\n")
+print(all_datasets[, c("title", "organization", "num_resources")])
+```
+
+## Trabajando con un Nuevo Dataset / Working with a New Dataset
+
+Ejemplo: Enfermedad de Carrión / Example: Carrion's Disease
+
+```{r carrion, eval=FALSE}
+# 1. Identificar el dataset / Identify the dataset
+carrion_info <- vp_dataset_info("carrion")
+print(carrion_info)
+
+# 2. Descargar los datos / Download the data
+carrion_data <- vp_download("carrion", max_rows = 1000)
+
+# 3. Explorar la estructura / Explore structure
+str(carrion_data)
+names(carrion_data)
+
+# 4. Verificar columnas típicas / Check typical columns
+typical_cols <- c("ano", "semana", "departamento", "provincia", 
+                  "distrito", "ubigeo", "edad", "sexo")
+cols_present <- intersect(names(carrion_data), typical_cols)
+cat("Columnas presentes / Columns present:\n")
+print(cols_present)
+```
+
+## Análisis Personalizado / Custom Analysis
+
+### Paso 1: Entender la Estructura / Step 1: Understanding Structure
+
+```{r structure, eval=FALSE}
+# Revisar valores únicos en columnas clave
+# Review unique values in key columns
+if ("enfermedad" %in% names(carrion_data)) {
+  table(carrion_data$enfermedad)
+}
+
+if ("diagnostic" %in% names(carrion_data)) {
+  # Códigos CIE-10 para Bartonelosis
+  # ICD-10 codes for Bartonellosis
+  table(carrion_data$diagnostic)
+}
+
+# Revisar años disponibles / Check available years
+if ("ano" %in% names(carrion_data)) {
+  range(carrion_data$ano)
+}
+```
+
+### Paso 2: Agregación Personalizada / Step 2: Custom Aggregation
+
+```{r custom_agg, eval=FALSE}
+# Casos por departamento y año
+# Cases by department and year
+carrion_dept <- vp_aggregate(
+  carrion_data,
+  by = c("ano", "departamento"),
+  cases_col = NULL  # Detectará automáticamente
+)
+
+# Serie temporal nacional
+# National time series
+carrion_ts <- vp_aggregate_time(
+  carrion_data,
+  period = "mes"
+)
+
+# Agregación geográfica con UBIGEO
+# Geographic aggregation with UBIGEO
+if ("ubigeo" %in% names(carrion_data)) {
+  carrion_geo <- vp_aggregate_geo(
+    carrion_data,
+    level = "department"
+  )
+}
+```
+
+## Trabajando con Múltiples Enfermedades / Working with Multiple Diseases
+
+```{r multiple, eval=FALSE}
+# Lista de enfermedades zoonóticas
+# List of zoonotic diseases
+zoonotic_diseases <- c("carrion", "leishmaniasis")
+
+# Descargar y combinar datos
+# Download and combine data
+library(data.table)
+
+all_zoonotic <- lapply(zoonotic_diseases, function(disease) {
+  cat("Descargando / Downloading:", disease, "\n")
+  data <- vp_download(disease, max_rows = 5000)
+  data$source_dataset <- disease
+  return(data)
+})
+
+# Combinar datasets
+# Combine datasets
+combined <- rbindlist(all_zoonotic, use.names = TRUE, fill = TRUE)
+
+# Análisis comparativo
+# Comparative analysis
+comparison <- vp_aggregate(
+  combined,
+  by = c("source_dataset", "ano"),
+  cases_col = NULL
+)
+
+print(comparison)
+```
+
+## Adaptando a Formatos No Estándar / Adapting to Non-Standard Formats
+
+Algunos datasets pueden tener formatos diferentes. Aquí hay estrategias para manejarlos:
+
+Some datasets may have different formats. Here are strategies to handle them:
+
+```{r nonstandard, eval=FALSE}
+# Ejemplo: Dataset con columnas diferentes
+# Example: Dataset with different columns
+
+# 1. Descargar y explorar
+eda_data <- vp_download("eda", max_rows = 1000)
+
+# 2. Mapear columnas si es necesario
+# Map columns if necessary
+if (!"ubigeo" %in% names(eda_data) && "codigo_ubigeo" %in% names(eda_data)) {
+  setnames(eda_data, "codigo_ubigeo", "ubigeo")
+}
+
+# 3. Crear columna de casos si no existe
+# Create cases column if it doesn't exist
+if (!"casos" %in% names(eda_data)) {
+  # Contar registros como casos
+  # Count records as cases
+  eda_summary <- eda_data[, .(casos = .N), by = .(ano, semana, departamento)]
+} else {
+  eda_summary <- eda_data
+}
+
+# 4. Aplicar funciones estándar
+# Apply standard functions
+eda_monthly <- vp_aggregate_time(eda_summary, period = "mes")
+```
+
+## Creando Funciones Auxiliares / Creating Helper Functions
+
+Para datasets que uses frecuentemente, puedes crear funciones auxiliares:
+
+For datasets you use frequently, you can create helper functions:
+
+```{r helpers, eval=FALSE}
+# Función auxiliar para IRA (Infecciones Respiratorias Agudas)
+# Helper function for ARI (Acute Respiratory Infections)
+vp_download_ira <- function(year = NULL, ...) {
+  # Descargar datos
+  data <- vp_download("ira", ...)
+  
+  # Filtrar por año si se especifica
+  if (!is.null(year)) {
+    data <- data[ano %in% year]
+  }
+  
+  # Agregar categorías de edad
+  if ("edad" %in% names(data)) {
+    data[, grupo_edad := cut(
+      edad,
+      breaks = c(0, 5, 15, 30, 60, Inf),
+      labels = c("0-4", "5-14", "15-29", "30-59", "60+"),
+      include.lowest = TRUE
+    )]
+  }
+  
+  return(data)
+}
+
+# Usar la función auxiliar
+# Use the helper function
+ira_2023 <- vp_download_ira(year = 2023, max_rows = 10000)
+
+# Análisis por grupo de edad
+# Analysis by age group
+ira_age <- vp_aggregate(
+  ira_2023,
+  by = c("grupo_edad", "sexo")
+)
+```
+
+## Buenas Prácticas / Best Practices
+
+### 1. Siempre Verificar la Estructura / Always Check Structure
+
+```{r verify, eval=FALSE}
+check_dataset_structure <- function(dataset_name) {
+  # Obtener información del dataset
+  info <- vp_dataset_info(dataset_name)
+  
+  # Descargar muestra pequeña
+  sample_data <- vp_download(dataset_name, max_rows = 100)
+  
+  # Reportar estructura
+  cat("Dataset:", dataset_name, "\n")
+  cat("Título:", info$titulo, "\n")
+  cat("Recursos:", length(info$recursos), "\n")
+  cat("Columnas:", paste(names(sample_data), collapse = ", "), "\n")
+  cat("Filas en muestra:", nrow(sample_data), "\n\n")
+  
+  return(invisible(sample_data))
+}
+
+# Verificar varios datasets
+# Check multiple datasets
+datasets_to_check <- c("malaria", "dengue", "ira", "eda")
+for (ds in datasets_to_check) {
+  check_dataset_structure(ds)
+}
+```
+
+### 2. Manejo de Errores / Error Handling
+
+```{r errors, eval=FALSE}
+safe_download <- function(dataset_name, ...) {
+  tryCatch({
+    vp_download(dataset_name, ...)
+  }, error = function(e) {
+    warning("Error descargando ", dataset_name, ": ", e$message)
+    return(NULL)
+  })
+}
+
+# Descargar múltiples datasets de forma segura
+# Safely download multiple datasets
+all_datasets <- lapply(c("malaria", "dengue", "unknown_dataset"), safe_download)
+all_datasets <- Filter(Negate(is.null), all_datasets)
+```
+
+### 3. Cacheo Eficiente / Efficient Caching
+
+```{r caching, eval=FALSE}
+# Configurar directorio de caché personalizado
+# Configure custom cache directory
+vp_cache_dir("~/vigilancia_data_cache")
+
+# Pre-descargar datasets comunes
+# Pre-download common datasets
+common_diseases <- c("malaria", "dengue", "ira", "eda")
+
+for (disease in common_diseases) {
+  cat("Pre-cargando / Pre-loading:", disease, "\n")
+  vp_download(disease, refresh = FALSE)  # Usa caché si existe
+}
+
+# Ver información del caché
+# View cache information
+cache_info <- vp_cache_info()
+print(cache_info)
+```
+
+## Conclusión / Conclusion
+
+`vigilaPeru` está diseñado para ser extensible a cualquier dataset de vigilancia epidemiológica en el portal de datos abiertos del Perú. Las funciones principales (`vp_download`, `vp_aggregate`, etc.) funcionarán con cualquier dataset que siga la estructura estándar del CDC-Perú.
+
+`vigilaPeru` is designed to be extensible to any epidemiological surveillance dataset on Peru's open data portal. The main functions (`vp_download`, `vp_aggregate`, etc.) will work with any dataset that follows the standard CDC-Peru structure.
+
+Para datasets con estructuras no estándar, las funciones de data.table integradas permiten transformaciones rápidas y eficientes.
+
+For datasets with non-standard structures, the integrated data.table functions allow for fast and efficient transformations.
+
+## Recursos Adicionales / Additional Resources
+
+- [Portal de Datos Abiertos del Perú](https://datosabiertos.gob.pe/)
+- [CDC Perú - Centro Nacional de Epidemiología](https://www.dge.gob.pe/portalnuevo/)
+- [Documentación de data.table](https://rdatatable.gitlab.io/data.table/)

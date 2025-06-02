@@ -1,0 +1,36 @@
+Package: vigilaPeru
+Title: Access Peru's National Epidemiological Surveillance Datasets
+Version: 0.0.0.9000
+Authors@R: 
+    person("Horacio", "Chacón Torrico", , "hchacont@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Fast, reproducible access to Peru's national epidemiological surveillance 
+    datasets (Ministry of Health / CDC-Peru) published on the Plataforma Nacional de 
+    Datos Abiertos. Provides live CKAN API client functionality with caching, ready-made 
+    helpers for malaria and dengue data, and lightning-fast aggregation with data.table.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports: 
+    data.table (>= 1.15.0),
+    ckanr (>= 0.10.0),
+    httr2 (>= 1.0.0),
+    jsonlite (>= 1.8.0),
+    futile.logger (>= 1.4.0),
+    rappdirs,
+    tibble
+Suggests: 
+    testthat (>= 3.0.0),
+    vcr,
+    knitr,
+    rmarkdown,
+    covr,
+    bench,
+    withr
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+URL: https://github.com/your-org/vigilaPeru
+BugReports: https://github.com/your-org/vigilaPeru/issues
+LazyData: true
+Language: es, en

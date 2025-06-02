@@ -1,0 +1,27 @@
+# Run package tests
+
+# Load required packages
+library(testthat)
+
+# Source package functions
+source("vigilaPeru/R/utils.R")
+source("vigilaPeru/R/api_helpers.R") 
+source("vigilaPeru/R/cache.R")
+source("vigilaPeru/R/datasets.R")
+source("vigilaPeru/R/aggregate.R")
+
+# Source test helper
+source("vigilaPeru/tests/testthat/helper.R")
+
+# Run individual test files
+cat("=== Running cache tests ===\n")
+test_file("vigilaPeru/tests/testthat/test-cache.R")
+
+cat("\n=== Running utils tests ===\n")
+test_file("vigilaPeru/tests/testthat/test-utils.R")
+
+cat("\n=== Running aggregate tests ===\n")
+test_file("vigilaPeru/tests/testthat/test-aggregate.R")
+
+cat("\n=== Running datasets tests ===\n")
+test_file("vigilaPeru/tests/testthat/test-datasets.R")

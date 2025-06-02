@@ -1,0 +1,60 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "vigilaPeru"
+  description: "Access to Peru's Epidemiological Surveillance Data"
+  navbar:
+    background: primary
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Getting Started"
+        href: articles/getting-started.qmd
+      - text: "Reference"
+        href: reference/index.qmd
+      - text: "Articles"
+        menu:
+          - text: "Malaria & Dengue Analysis"
+            href: articles/malaria-dengue-demo.qmd
+          - text: "Geographic Aggregations"
+            href: articles/geographic-analysis.qmd
+          - text: "Time Series Analysis"
+            href: articles/time-series.qmd
+      - text: "News"
+        href: news/index.qmd
+    right:
+      - icon: github
+        href: https://github.com/your-org/vigilaPeru
+      
+  sidebar:
+    - title: "Reference"
+      style: "docked"
+      contents:
+        - section: "Data Access"
+          contents:
+            - reference/vp_download.qmd
+            - reference/vp_datasets.qmd
+            - reference/vp_metadata.qmd
+        - section: "Data Processing"
+          contents:
+            - reference/vp_aggregate.qmd
+            - reference/vp_aggregate_geo.qmd
+            - reference/vp_aggregate_time.qmd
+        - section: "Utilities"
+          contents:
+            - reference/vp_cache_dir.qmd
+            - reference/vp_cache_clear.qmd
+            - reference/vp_discover_datasets.qmd
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    code-overflow: wrap
+    code-tools: true
+    
+execute:
+  freeze: auto

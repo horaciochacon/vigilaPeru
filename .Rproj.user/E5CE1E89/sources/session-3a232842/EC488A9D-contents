@@ -1,0 +1,69 @@
+# Test ubigeo functions
+
+# Load required packages
+library(testthat)
+library(data.table)
+
+# Source the ubigeo helpers
+source("vigilaPeru/R/ubigeo_helpers.R")
+
+# Run the tests
+cat("=== Testing UBIGEO functions ===\n\n")
+
+# Test department extraction
+cat("Testing department extraction...\n")
+test_that("ubigeo extraction functions work correctly", {
+  # Test department extraction
+  expect_equal(ubigeo_get_department("150101"), "15")
+  expect_equal(ubigeo_get_department(c("150101", "010203")), c("15", "01"))
+  
+  # Test province extraction
+  expect_equal(ubigeo_get_province("150101"), "1501")
+  expect_equal(ubigeo_get_province(c("150101", "010203")), c("1501", "0102"))
+})
+
+# Test validation
+cat("\nTesting ubigeo validation...\n")
+test_that("ubigeo validation works", {
+  # Valid codes
+  expect_true(all(ubigeo_is_valid(c("150101", "010101", "250505"))))
+  
+  # Invalid codes
+  expect_false(ubigeo_is_valid("999999"))  # Department > 25
+  expect_false(ubigeo_is_valid("15"))      # Too short
+  expect_false(ubigeo_is_valid("ABC123"))  # Non-numeric
+  expect_false(ubigeo_is_valid("260101"))  # Department 26 doesn't exist
+})
+
+# Test padding
+cat("\nTesting ubigeo padding...\n")
+test_that("ubigeo padding works", {
+  expect_equal(ubigeo_pad("10101"), "010101")
+  expect_equal(ubigeo_pad("150101"), "150101")
+  expect_equal(ubigeo_pad(10101), "010101")
+})
+
+# Test department table
+cat("\nTesting department reference table...\n")
+deps <- ubigeo_departments()
+print(head(deps))
+
+# Test aggregation
+cat("\nTesting ubigeo aggregation...\n")
+dt <- data.table::data.table(
+  ubigeo = c("150101", "150102", "150201", "130101", "130201"),
+  casos = c(10, 20, 15, 5, 8)
+)
+
+cat("\nOriginal data:\n")
+print(dt)
+
+cat("\nAggregated by department:\n")
+result_dep <- ubigeo_aggregate(dt, level = "department", include_names = TRUE)
+print(result_dep)
+
+cat("\nAggregated by province:\n")
+result_prov <- ubigeo_aggregate(dt, level = "province", include_names = TRUE)
+print(result_prov)
+
+cat("\n=== All tests completed ===\n")

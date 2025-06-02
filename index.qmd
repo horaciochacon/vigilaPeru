@@ -1,0 +1,135 @@
+---
+title: "vigilaPeru"
+subtitle: "Fast, reproducible access to Peru's epidemiological surveillance data"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+::: {.hero-banner}
+## Access Peru's National Epidemiological Surveillance Data
+
+Streamline your public health research with direct access to CDC-Peru's surveillance datasets through R.
+:::
+
+## 🚀 Quick Start
+
+Install the package and start analyzing epidemiological data in minutes:
+
+```r
+# Install from GitHub
+remotes::install_github("your-org/vigilaPeru")
+
+# Load and explore
+library(vigilaPeru)
+
+# Download dengue surveillance data
+dengue <- vp_download("dengue")
+
+# Quick aggregation by year
+yearly_cases <- vp_aggregate(dengue, by = "ano")
+```
+
+## 📊 Available Datasets
+
+Access comprehensive surveillance data from Peru's Ministry of Health:
+
+::: {.grid}
+::: {.g-col-6}
+### Infectious Diseases
+- **Malaria** - P. vivax and P. falciparum cases
+- **Dengue** - All serotypes and severity levels
+- **Leishmaniasis** - Cutaneous and mucocutaneous
+- **Zoonosis** - Multiple zoonotic diseases
+:::
+
+::: {.g-col-6}
+### Respiratory & Gastrointestinal
+- **IRA** - Acute respiratory infections
+- **EDA** - Acute diarrheal diseases
+- **Carrión Disease** - Bartonellosis surveillance
+:::
+:::
+
+## ⚡ Key Features
+
+### Lightning-Fast Performance
+Powered by `data.table` for blazing-fast aggregations on millions of records.
+
+### Smart Caching
+Automatic local caching with incremental updates saves bandwidth and time.
+
+### Bilingual Support
+Full documentation in Spanish and English for broader accessibility.
+
+### DCAT Metadata
+Standard metadata format ensures interoperability with other tools.
+
+## 📈 Common Use Cases
+
+::: {.panel-tabset}
+
+### Time Series Analysis
+```r
+# Monthly malaria trends
+monthly <- vp_aggregate_time(
+  malaria_data,
+  period = "mes"
+)
+```
+
+### Geographic Analysis
+```r
+# Cases by department
+by_dept <- vp_aggregate_geo(
+  data,
+  level = "departamento"
+)
+```
+
+### Demographic Analysis
+```r
+# Cases by age and sex
+demographics <- vp_aggregate(
+  data,
+  by = c("edad_grupo", "sexo")
+)
+```
+
+:::
+
+## 🛠️ Core Functions
+
+| Function | Purpose |
+|----------|---------|
+| `vp_download()` | Download and cache surveillance data |
+| `vp_aggregate()` | Fast grouped summaries with custom statistics |
+| `vp_datasets()` | List all available datasets |
+| `vp_metadata()` | Get DCAT/DCAP-AP metadata |
+| `vp_cache_dir()` | Manage local cache directory |
+
+## 📚 Learn More
+
+- [Getting Started Guide](articles/getting-started.qmd) - Complete introduction
+- [Function Reference](reference/index.qmd) - Detailed documentation
+- [Example Analyses](articles/malaria-dengue-demo.qmd) - Real-world examples
+
+## 🤝 Contributing
+
+We welcome contributions! See our [Contributing Guide](https://github.com/your-org/vigilaPeru/blob/main/CONTRIBUTING.md) for details.
+
+## 📄 License
+
+MIT License - see [LICENSE.md](https://github.com/your-org/vigilaPeru/blob/main/LICENSE.md)
+
+Data provided by Peru's Ministry of Health under Creative Commons BY 4.0.
+
+---
+
+<p style="text-align: center;">
+Made with ❤️ for public health in Peru 🇵🇪
+</p>

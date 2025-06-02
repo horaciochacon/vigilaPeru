@@ -1,0 +1,79 @@
+url: https://YOUR_USERNAME.github.io/vigilaPeru/
+
+template:
+  bootstrap: 5
+  bootswatch: cosmo
+  bslib:
+    primary: "#0054AD"
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem
+
+home:
+  title: "vigilaPeru - Acceso a Datos de Vigilancia Epidemiológica del Perú"
+  description: "Acceso rápido y reproducible a los datasets de vigilancia epidemiológica del Perú"
+  
+authors:
+  Horacio Chacón Torrico:
+    href: https://github.com/YOUR_USERNAME
+
+navbar:
+  title: "vigilaPeru"
+  left:
+    - icon: fa-home
+      href: index.html
+    - text: "Inicio/Start"
+      href: articles/index.html
+    - text: "Referencia/Reference"
+      href: reference/index.html
+    - text: "Artículos/Articles"
+      menu:
+        - text: "Demo Malaria y Dengue"
+          href: articles/malaria-dengue-demo.html
+        - text: "Extender a Otras Enfermedades"
+          href: articles/extending-to-other-diseases.html
+  right:
+    - icon: fa-github
+      href: https://github.com/YOUR_USERNAME/vigilaPeru
+
+reference:
+- title: "Funciones Principales / Main Functions"
+  desc: "Funciones centrales para acceder a datos / Core functions for data access"
+  contents:
+  - vp_download
+  - vp_datasets
+  - vp_metadata
+  - vp_dataset_info
+  - vp_list_resources
+  - vp_discover_datasets
+  
+- title: "Agregación de Datos / Data Aggregation"
+  desc: "Funciones para agregación rápida / Functions for fast aggregation"
+  contents:
+  - vp_aggregate
+  - vp_aggregate_geo
+  - vp_aggregate_time
+  
+- title: "Gestión de Caché / Cache Management"
+  desc: "Control del caché local / Local cache control"
+  contents:
+  - vp_cache_dir
+  - vp_cache_clear
+  - vp_cache_info
+  
+- title: "Funciones UBIGEO / UBIGEO Functions"
+  desc: "Utilidades para códigos geográficos / Geographic code utilities"
+  contents:
+  - ubigeo_get_department
+  - ubigeo_get_province
+  - ubigeo_is_valid
+  - ubigeo_pad
+  - ubigeo_departments
+  - ubigeo_aggregate
+
+footer:
+  structure:
+    left: developed_by
+    right: built_with
+    
+development:
+  mode: auto
