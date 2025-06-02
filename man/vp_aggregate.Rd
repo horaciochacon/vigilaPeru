@@ -50,7 +50,7 @@ mal <- vp_download("malaria")
 agg1 <- vp_aggregate(mal, by = c("ano", "departamento"))
 
 # Agregar por semana epidemiol\u00f3gica / Aggregate by epidemiological week
-agg2 <- vp_aggregate(mal, by = list(year = "ano", week = "semana"))
+agg2 <- vp_aggregate(mal, by = c("ano", "semana"))
 
 # Agregar con m\u00faltiples estad\u00edsticas / Aggregate with multiple statistics
 agg3 <- vp_aggregate(mal, 

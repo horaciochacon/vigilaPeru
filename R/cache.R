@@ -90,7 +90,7 @@ vp_cache_clear <- function(dataset = NULL, older_than = NULL) {
     files <- list.files(cache_dir, full.names = TRUE, recursive = TRUE)
     if (length(files) > 0) {
       unlink(files)
-      futile.logger::flog.info(sprintf("Eliminados %d archivos del caché / Removed %d files from cache", length(files)))
+      futile.logger::flog.info(sprintf("Eliminados %d archivos del caché / Removed %d files from cache", length(files), length(files)))
     } else {
       futile.logger::flog.info("Caché ya está vacío / Cache already empty")
     }

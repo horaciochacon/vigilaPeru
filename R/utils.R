@@ -2,6 +2,15 @@
 #' @noRd
 NULL
 
+# Bind global variables to suppress R CMD check NOTEs
+if(getRversion() >= "2.15.1") {
+  utils::globalVariables(c(
+    ".", ":=", ".N", ".SD", ".BY", ".I", ".GRP", ".NGRP", ".EACHI",
+    "ano", "semana", "ubigeo", "departamento", "geo_code", "dep_code",
+    "codigo", "i.departamento", "departamento_codigo", "mes", "trimestre"
+  ))
+}
+
 #' Verificar conexión a internet / Check internet connection
 #' @noRd
 check_internet <- function() {

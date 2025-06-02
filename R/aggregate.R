@@ -33,7 +33,7 @@
 #' agg1 <- vp_aggregate(mal, by = c("ano", "departamento"))
 #' 
 #' # Agregar por semana epidemiol\u00f3gica / Aggregate by epidemiological week
-#' agg2 <- vp_aggregate(mal, by = list(year = "ano", week = "semana"))
+#' agg2 <- vp_aggregate(mal, by = c("ano", "semana"))
 #' 
 #' # Agregar con m\u00faltiples estad\u00edsticas / Aggregate with multiple statistics
 #' agg3 <- vp_aggregate(mal, 
@@ -96,7 +96,7 @@ vp_aggregate <- function(data,
   missing_vars <- setdiff(by_vars, names(data))
   if (length(missing_vars) > 0) {
     stop(sprintf("Variables no encontradas: %s / Variables not found: %s", 
-                 paste(missing_vars, collapse = ", ")))
+                 paste(missing_vars, collapse = ", "), paste(missing_vars, collapse = ", ")))
   }
   
   # Preparar funciones de resumen / Prepare summary functions
